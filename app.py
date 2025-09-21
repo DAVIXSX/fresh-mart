@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 import json
+import os
 from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = 'supermarket_secret_key_2023'
+app.secret_key = os.environ.get('SECRET_KEY', 'supermarket_secret_key_2023')
 
 # بيانات المنتجات النموذجية
 CATEGORIES = {
@@ -871,4 +872,5 @@ def inject_cart_count():
     return {'cart_count': get_cart_count()}
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
