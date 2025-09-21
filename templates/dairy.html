@@ -1,0 +1,646 @@
+{% extends "base.html" %}
+
+{% block title %}منتجات الألبان الطازجة - فريش مارت{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Modern Dairy Page */
+.dairy-hero {
+    background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 50%, #90CAF9 100%);
+    padding: var(--space-20) 0;
+    position: relative;
+    overflow: hidden;
+    color: #0D47A1;
+}
+
+.dairy-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('https://images.unsplash.com/photo-1550583724-b2692b85b150?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80') center/cover;
+    opacity: 0.1;
+    z-index: 1;
+}
+
+.dairy-hero::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+    animation: heroFloat 35s linear infinite;
+    z-index: 2;
+}
+
+@keyframes heroFloat {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.05); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
+.dairy-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: var(--space-16);
+    position: relative;
+    z-index: 3;
+}
+
+.dairy-title {
+    font-size: var(--text-6xl);
+    font-weight: var(--font-bold);
+    margin-bottom: var(--space-6);
+    text-shadow: 2px 2px 4px rgba(255,255,255,0.5);
+}
+
+.dairy-subtitle {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-8);
+    line-height: 1.6;
+    opacity: 0.9;
+}
+
+.dairy-features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+    margin-top: var(--space-8);
+}
+
+.feature-item {
+    background: rgba(255, 255, 255, 0.4);
+    padding: var(--space-4);
+    border-radius: var(--radius-xl);
+    text-align: center;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transition: all var(--transition-base);
+    color: #0D47A1;
+}
+
+.feature-item:hover {
+    transform: translateY(-4px);
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.dairy-visual {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+}
+
+.dairy-icon-large {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    transition: all var(--transition-base);
+    animation: floatIcon 6s ease-in-out infinite;
+}
+
+.dairy-icon-large img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+@keyframes floatIcon {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    33% { transform: translateY(-12px) rotate(3deg); }
+    66% { transform: translateY(-8px) rotate(-2deg); }
+}
+
+.dairy-content {
+    padding: var(--space-16) 0;
+    background: linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 50%, #EEEEEE 100%);
+}
+
+.section-header-dairy {
+    text-align: center;
+    margin-bottom: var(--space-12);
+}
+
+.section-title-dairy {
+    font-size: var(--text-4xl);
+    font-weight: var(--font-bold);
+    color: #1565C0;
+    margin-bottom: var(--space-4);
+    position: relative;
+}
+
+.section-title-dairy::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 4px;
+    background: linear-gradient(90deg, #E3F2FD, #BBDEFB, #90CAF9);
+    border-radius: var(--radius-full);
+}
+
+.dairy-filters {
+    background: white;
+    border-radius: var(--radius-2xl);
+    padding: var(--space-8);
+    margin-bottom: var(--space-12);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    border: 1px solid rgba(33, 150, 243, 0.1);
+}
+
+.filters-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--space-6);
+    gap: var(--space-3);
+}
+
+.filters-title {
+    font-size: var(--text-xl);
+    font-weight: var(--font-bold);
+    color: #1565C0;
+}
+
+.filters-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr auto;
+    gap: var(--space-4);
+    align-items: end;
+}
+
+.filter-input-dairy,
+.filter-select-dairy {
+    width: 100%;
+    padding: var(--space-4);
+    border: 2px solid var(--neutral-200);
+    border-radius: var(--radius-lg);
+    font-family: inherit;
+    font-size: var(--text-sm);
+    transition: all var(--transition-base);
+    background: white;
+}
+
+.filter-input-dairy:focus,
+.filter-select-dairy:focus {
+    outline: none;
+    border-color: #2196F3;
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.15);
+    transform: translateY(-1px);
+}
+
+.filter-button {
+    background: linear-gradient(135deg, #2196F3, #42A5F5);
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    padding: var(--space-4) var(--space-8);
+    font-weight: var(--font-semibold);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+}
+
+.filter-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
+    background: linear-gradient(135deg, #1976D2, #2196F3);
+}
+
+.dairy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: var(--space-10);
+}
+
+.dairy-card {
+    background: white;
+    border-radius: var(--radius-3xl);
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    transition: all var(--transition-slow);
+    position: relative;
+    border: 1px solid var(--neutral-100);
+}
+
+.dairy-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #E3F2FD, #BBDEFB, #90CAF9);
+    transform: scaleX(0);
+    transition: transform var(--transition-base);
+    z-index: 2;
+}
+
+.dairy-card:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+}
+
+.dairy-card:hover::before {
+    transform: scaleX(1);
+}
+
+.dairy-image {
+    position: relative;
+    height: 280px;
+    background: linear-gradient(135deg, #FAFAFA, #F5F5F5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.dairy-real-image {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: var(--radius-2xl);
+    transition: all var(--transition-base);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+.dairy-card:hover .dairy-real-image {
+    transform: scale(1.1) rotate(-2deg);
+}
+
+.dairy-badges {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    z-index: 3;
+}
+
+.dairy-badge {
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: var(--font-bold);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.badge-fresh {
+    background: linear-gradient(135deg, #2196F3, #42A5F5);
+}
+
+.badge-organic {
+    background: linear-gradient(135deg, #4CAF50, #66BB6A);
+}
+
+.badge-sale {
+    background: linear-gradient(135deg, #F44336, #EF5350);
+}
+
+.dairy-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(33, 150, 243, 0.95), rgba(66, 165, 245, 0.95));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+.dairy-card:hover .dairy-overlay {
+    opacity: 1;
+}
+
+.quick-view-btn-dairy {
+    background: white;
+    color: #2196F3;
+    padding: var(--space-4) var(--space-8);
+    border-radius: var(--radius-full);
+    text-decoration: none;
+    font-weight: var(--font-bold);
+    transform: translateY(20px);
+    transition: all var(--transition-base);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+.dairy-card:hover .quick-view-btn-dairy {
+    transform: translateY(0);
+}
+
+.quick-view-btn-dairy:hover {
+    background: #2196F3;
+    color: white;
+    transform: scale(1.05);
+}
+
+.dairy-info {
+    padding: var(--space-8);
+}
+
+.dairy-name {
+    font-size: var(--text-xl);
+    font-weight: var(--font-bold);
+    color: var(--neutral-800);
+    margin-bottom: var(--space-3);
+}
+
+.dairy-brand {
+    color: var(--neutral-500);
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-4);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.brand-logo {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.dairy-nutrients {
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-5);
+    flex-wrap: wrap;
+}
+
+.nutrient-tag {
+    background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+    color: #1565C0;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+    border: 1px solid #90CAF9;
+}
+
+.dairy-price {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+}
+
+.price-current-dairy {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-bold);
+    color: #2196F3;
+}
+
+.add-to-cart-btn-dairy {
+    background: linear-gradient(135deg, #2196F3, #42A5F5);
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    padding: var(--space-4) var(--space-6);
+    font-weight: var(--font-bold);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+}
+
+.add-to-cart-btn-dairy:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
+    background: linear-gradient(135deg, #1976D2, #2196F3);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .dairy-header {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: var(--space-10);
+    }
+    
+    .dairy-visual {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .filters-row {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+    }
+    
+    .dairy-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-8);
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Dairy Hero Section -->
+<section class="dairy-hero">
+    <div class="container">
+        <div class="dairy-header">
+            <div class="dairy-content-text">
+                <h1 class="dairy-title">🥛 منتجات الألبان الطازجة</h1>
+                <p class="dairy-subtitle">اكتشف مجموعتنا من منتجات الألبان الطازجة الغنية بالكالسيوم والبروتين، مصدر طبيعي للعناصر الغذائية الأساسية لصحة العظام والأسنان</p>
+                
+                <div class="dairy-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">🦴</span>
+                        <span class="feature-text">غنية بالكالسيوم</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">💪</span>
+                        <span class="feature-text">بروتين عالي الجودة</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">❄️</span>
+                        <span class="feature-text">طازجة ومبردة</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dairy-visual">
+                <div class="dairy-icon-large">
+                    <img src="https://images.unsplash.com/photo-1550583724-b2692b85b150?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="حليب">
+                </div>
+                <div class="dairy-icon-large">
+                    <img src="https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="زبادي">
+                </div>
+                <div class="dairy-icon-large">
+                    <img src="https://images.unsplash.com/photo-1552767059-ce182ead6c1b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="جبنة">
+                </div>
+                <div class="dairy-icon-large">
+                    <img src="https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="زبدة">
+                </div>
+                <div class="dairy-icon-large">
+                    <img src="https://images.unsplash.com/photo-1563636619-e9143da7973b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="كريمة">
+                </div>
+                <div class="dairy-icon-large">
+                    <img src="https://images.unsplash.com/photo-1628088062854-d1870b4553da?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="أيس كريم">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Dairy Content -->
+<section class="dairy-content">
+    <div class="container">
+        <div class="section-header-dairy">
+            <h2 class="section-title-dairy">تشكيلة متنوعة من منتجات الألبان</h2>
+            <p class="section-subtitle-dairy">منتجات ألبان طازجة ومغذية مختارة بعناية لتلبي احتياجاتك اليومية من الكالسيوم والبروتين والفيتامينات</p>
+        </div>
+
+        <!-- Enhanced Modern Filters -->
+        <div class="dairy-filters">
+            <div class="filters-header">
+                <span class="filters-title">🔍 فلتر وبحث متقدم</span>
+            </div>
+            <form method="GET" class="filters-form">
+                <div class="filters-row">
+                    <div class="filter-group-dairy">
+                        <label class="filter-label-dairy">🔍 ابحث في منتجات الألبان</label>
+                        <input type="text" name="search" placeholder="ابحث عن الحليب، الزبادي، الجبنة..." 
+                               class="filter-input-dairy" value="{{ request.args.get('search', '') }}">
+                    </div>
+                    
+                    <div class="filter-group-dairy">
+                        <label class="filter-label-dairy">💰 نطاق السعر</label>
+                        <select name="price_range" class="filter-select-dairy">
+                            <option value="">جميع الأسعار</option>
+                            <option value="0-5" {% if request.args.get('price_range') == '0-5' %}selected{% endif %}>$0 - $5</option>
+                            <option value="5-10" {% if request.args.get('price_range') == '5-10' %}selected{% endif %}>$5 - $10</option>
+                            <option value="10+" {% if request.args.get('price_range') == '10+' %}selected{% endif %}>$10+</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group-dairy">
+                        <label class="filter-label-dairy">🥛 النوع</label>
+                        <select name="dairy_type" class="filter-select-dairy">
+                            <option value="">جميع الأنواع</option>
+                            <option value="milk" {% if request.args.get('dairy_type') == 'milk' %}selected{% endif %}>حليب</option>
+                            <option value="cheese" {% if request.args.get('dairy_type') == 'cheese' %}selected{% endif %}>جبنة</option>
+                            <option value="yogurt" {% if request.args.get('dairy_type') == 'yogurt' %}selected{% endif %}>زبادي</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group-dairy">
+                        <label class="filter-label-dairy">🏷️ الترتيب</label>
+                        <select name="sort" class="filter-select-dairy">
+                            <option value="name" {% if request.args.get('sort') == 'name' %}selected{% endif %}>الاسم أ-ي</option>
+                            <option value="price_low" {% if request.args.get('sort') == 'price_low' %}selected{% endif %}>السعر: منخفض إلى مرتفع</option>
+                            <option value="price_high" {% if request.args.get('sort') == 'price_high' %}selected{% endif %}>السعر: مرتفع إلى منخفض</option>
+                            <option value="popularity" {% if request.args.get('sort') == 'popularity' %}selected{% endif %}>الأكثر شعبية</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="filter-button">
+                        <span>🔍</span>
+                        <span>تطبيق</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Dairy Grid -->
+        <div class="dairy-grid">
+            {% for dairy in dairies %}
+            <div class="dairy-card">
+                <div class="dairy-badges">
+                    <div class="dairy-badge badge-fresh">طازج</div>
+                    {% if 'عضوي' in dairy.get('description', '') %}
+                    <div class="dairy-badge badge-organic">عضوي</div>
+                    {% endif %}
+                    {% if dairy.discount > 0 %}
+                    <div class="dairy-badge badge-sale">خصم {{ dairy.discount }}%</div>
+                    {% endif %}
+                </div>
+                
+                <div class="dairy-image">
+                    {% if 'حليب كامل الدسم' in dairy.name %}
+                    <img src="{{ url_for('static', filename='img/products/dairy/حليب كامل الدسم.jpg') }}" alt="{{ dairy.name }}" class="dairy-real-image">
+                    {% elif 'زبادي يوناني' in dairy.name %}
+                    <img src="{{ url_for('static', filename='img/products/dairy/زبادي يوناني.webp') }}" alt="{{ dairy.name }}" class="dairy-real-image">
+                    {% elif 'جبنة شيدر' in dairy.name %}
+                    <img src="{{ url_for('static', filename='img/products/dairy/جبنة شيدر.jpg') }}" alt="{{ dairy.name }}" class="dairy-real-image">
+                    {% elif 'زبدة' in dairy.name %}
+                    <img src="{{ url_for('static', filename='img/products/dairy/زبدة.avif') }}" alt="{{ dairy.name }}" class="dairy-real-image">
+                    {% else %}
+                    <span class="dairy-placeholder">🥛</span>
+                    {% endif %}
+                    <div class="dairy-overlay">
+                        <a href="{{ url_for('product_detail', product_id=dairy.id) }}" class="quick-view-btn-dairy">
+                            ✨ عرض سريع
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="dairy-info">
+                    <h3 class="dairy-name">{{ dairy.name }}</h3>
+                    <p class="dairy-brand">
+                        <img src="https://images.unsplash.com/photo-1497486751825-1233686d5d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="brand" class="brand-logo">
+                        {{ dairy.brand }}
+                    </p>
+                    <p class="dairy-description">{{ dairy.description[:80] }}{% if dairy.description|length > 80 %}...{% endif %}</p>
+                    
+                    {% if dairy.get('nutrients') %}
+                    <div class="dairy-nutrients">
+                        {% for nutrient in dairy.nutrients %}
+                        <span class="nutrient-tag">{{ nutrient }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="dairy-price">
+                        {% if dairy.discount > 0 %}
+                        <span class="price-original">${{ "%.2f"|format(dairy.price) }}</span>
+                        <span class="price-current-dairy">${{ "%.2f"|format(dairy.price * (1 - dairy.discount / 100)) }}</span>
+                        {% else %}
+                        <span class="price-current-dairy">${{ "%.2f"|format(dairy.price) }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <form action="{{ url_for('add_to_cart') }}" method="POST">
+                        <input type="hidden" name="product_id" value="{{ dairy.id }}">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="add-to-cart-btn-dairy" {% if dairy.stock == 0 %}disabled{% endif %}>
+                            {% if dairy.stock == 0 %}
+                                نفد المخزون
+                            {% else %}
+                                <span>🛒</span>
+                                <span>أضف للعربة</span>
+                            {% endif %}
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

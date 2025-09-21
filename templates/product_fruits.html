@@ -1,0 +1,558 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - فريش مارت{% endblock %}
+
+{% block extra_css %}
+<style>
+:root {
+    --fruits-primary: #FF5722;
+    --fruits-secondary: #FF7043;
+    --fruits-accent: #FF8A65;
+    --fruits-light: #FFF3E0;
+    --fruits-bg: #FFEBEE;
+    --fruits-dark: #D84315;
+    --fruits-gradient: linear-gradient(135deg, #FF5722, #FF7043);
+    --fruits-shadow: 0 8px 32px rgba(255, 87, 34, 0.3);
+}
+
+.fruits-hero {
+    background: linear-gradient(135deg, var(--fruits-light) 0%, #FFCCBC 50%, #FFE0B2 100%);
+    padding: 2rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.fruits-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="fruitPattern" width="25" height="25" patternUnits="userSpaceOnUse"><circle cx="12.5" cy="12.5" r="4" fill="rgba(255,87,34,0.08)"/><circle cx="5" cy="5" r="2" fill="rgba(255,87,34,0.12)"/><circle cx="20" cy="8" r="1.5" fill="rgba(255,87,34,0.1)"/><circle cx="8" cy="20" r="2.5" fill="rgba(255,87,34,0.09)"/></pattern></defs><rect width="100" height="100" fill="url(%23fruitPattern)"/></svg>');
+    opacity: 0.6;
+}
+
+.fruits-hero::after {
+    content: '🍎';
+    position: absolute;
+    top: 20%;
+    right: 12%;
+    font-size: 3.5rem;
+    opacity: 0.25;
+    animation: fruitSway 8s ease-in-out infinite;
+}
+
+@keyframes fruitSway {
+    0%, 100% { transform: translateY(0px) rotate(-5deg); }
+    25% { transform: translateY(-18px) rotate(5deg); }
+    50% { transform: translateY(-10px) rotate(0deg); }
+    75% { transform: translateY(-15px) rotate(-3deg); }
+}
+
+.fruits-breadcrumb {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 1rem;
+    border-radius: 25px;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 2;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 87, 34, 0.2);
+}
+
+.fruits-breadcrumb a {
+    color: var(--fruits-dark);
+    text-decoration: none;
+    font-weight: 500;
+    margin: 0 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.fruits-breadcrumb a:hover {
+    color: var(--fruits-primary);
+}
+
+.fruits-product-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 0;
+    background: white;
+}
+
+.fruits-main-image {
+    width: 100%;
+    height: 500px;
+    background: linear-gradient(135deg, var(--fruits-light), #FFCCBC);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--fruits-shadow);
+    margin-bottom: 1.5rem;
+    border: 2px solid rgba(255, 87, 34, 0.1);
+}
+
+.fruits-main-image::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.4), transparent);
+    transform: rotate(45deg);
+    animation: fruitGlow 6s infinite;
+}
+
+@keyframes fruitGlow {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+}
+
+.fruits-placeholder {
+    font-size: 8rem;
+    color: var(--fruits-primary);
+    animation: fruitTwist 6s ease-in-out infinite;
+    text-shadow: 2px 2px 8px rgba(255, 87, 34, 0.3);
+}
+
+@keyframes fruitTwist {
+    0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+    25% { transform: translateY(-12px) rotate(8deg) scale(1.05); }
+    50% { transform: translateY(-6px) rotate(-4deg) scale(1.08); }
+    75% { transform: translateY(-10px) rotate(3deg) scale(1.03); }
+}
+
+.fruits-badges {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.fruits-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    backdrop-filter: blur(10px);
+}
+
+.fruits-discount-badge {
+    background: linear-gradient(135deg, #E91E63, #C2185B);
+    color: white;
+}
+
+.fruits-fresh-badge {
+    background: linear-gradient(135deg, var(--fruits-primary), var(--fruits-secondary));
+    color: white;
+}
+
+.fruits-vitamin-badge {
+    background: linear-gradient(135deg, #FFC107, #FF9800);
+    color: white;
+}
+
+.fruits-header {
+    text-align: center;
+    padding: 2.5rem;
+    background: linear-gradient(135deg, var(--fruits-light), rgba(255,255,255,0.95));
+    border-radius: 25px;
+    margin-bottom: 2rem;
+    border: 2px solid rgba(255, 87, 34, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.fruits-header::before {
+    content: '🍓';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    font-size: 2.5rem;
+    opacity: 0.15;
+    animation: fruitSpin 10s linear infinite;
+}
+
+.fruits-header::after {
+    content: '🍊';
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+    font-size: 2rem;
+    opacity: 0.12;
+    animation: fruitSpin 12s linear infinite reverse;
+}
+
+@keyframes fruitSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.fruits-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--fruits-dark);
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.fruits-brand {
+    font-size: 1.3rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
+
+.fruits-rating {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.fruits-stars {
+    font-size: 1.6rem;
+    color: #FFD700;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.fruits-pricing {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 25px;
+    box-shadow: var(--fruits-shadow);
+    text-align: center;
+    margin-bottom: 2rem;
+    border: 2px solid rgba(255, 87, 34, 0.1);
+    position: relative;
+}
+
+.fruits-pricing::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--fruits-gradient);
+    border-radius: 25px 25px 0 0;
+}
+
+.fruits-price-current {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--fruits-primary);
+    display: block;
+    text-shadow: 2px 2px 4px rgba(255, 87, 34, 0.1);
+}
+
+.fruits-price-original {
+    font-size: 1.3rem;
+    color: #999;
+    text-decoration: line-through;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.fruits-savings {
+    background: linear-gradient(135deg, #E91E63, #C2185B);
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 30px;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    display: inline-block;
+    box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+    animation: fruitPulse 2.5s infinite;
+}
+
+@keyframes fruitPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+}
+
+.fruits-cart-section {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 25px;
+    box-shadow: var(--fruits-shadow);
+    border: 2px solid rgba(255, 87, 34, 0.1);
+}
+
+.fruits-quantity-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+    background: var(--fruits-light);
+    padding: 1.2rem;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(255, 87, 34, 0.2);
+}
+
+.fruits-qty-btn {
+    width: 55px;
+    height: 55px;
+    border: none;
+    background: var(--fruits-gradient);
+    color: white;
+    border-radius: 50%;
+    font-size: 1.6rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(255, 87, 34, 0.3);
+}
+
+.fruits-qty-btn:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 6px 20px rgba(255, 87, 34, 0.4);
+}
+
+.fruits-qty-input {
+    width: 110px;
+    height: 55px;
+    text-align: center;
+    border: 2px solid var(--fruits-primary);
+    border-radius: 15px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    background: white;
+    color: var(--fruits-dark);
+}
+
+.fruits-add-cart-btn {
+    width: 100%;
+    background: var(--fruits-gradient);
+    color: white;
+    border: none;
+    padding: 1.8rem;
+    border-radius: 20px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--fruits-shadow);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+}
+
+.fruits-add-cart-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(255, 87, 34, 0.4);
+}
+
+@media (max-width: 768px) {
+    .fruits-product-layout {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .fruits-title {
+        font-size: 2rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="fruits-hero">
+    <div class="fruits-breadcrumb">
+        <div class="container">
+            <a href="{{ url_for('index') }}">🏠 الرئيسية</a>
+            <span>›</span>
+            <a href="{{ url_for('fruits') }}">🍎 الفواكه</a>
+            <span>›</span>
+            <span>{{ product.name }}</span>
+        </div>
+    </div>
+</section>
+
+<section class="fruits-product-main">
+    <div class="container">
+        <div class="fruits-product-layout">
+            <div class="fruits-product-images">
+                <div class="fruits-main-image">
+                    {% if 'تفاح جالا' in product.name or 'تفاح' in product.name %}
+                    <img src="{{ url_for('static', filename='img/products/fruits/تفاح جالا.webp') }}" alt="{{ product.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;">
+                    {% elif 'موز' in product.name %}
+                    <img src="{{ url_for('static', filename='img/products/fruits/موز.jpg') }}" alt="{{ product.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;">
+                    {% elif 'فراولة' in product.name %}
+                    <img src="{{ url_for('static', filename='img/products/fruits/فراولة.webp') }}" alt="{{ product.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;">
+                    {% elif 'عبوة برتقال' in product.name or 'برتقال' in product.name %}
+                    <img src="{{ url_for('static', filename='img/products/fruits/عبوة برتقال.webp') }}" alt="{{ product.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;">
+                    {% elif 'توت أزرق' in product.name or 'توت' in product.name %}
+                    <img src="{{ url_for('static', filename='img/products/fruits/توت أزرق.jpg') }}" alt="{{ product.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;">
+                    {% else %}
+                    <span class="fruits-placeholder">🍎</span>
+                    {% endif %}
+                    
+                    <div class="fruits-badges">
+                        {% if product.discount > 0 %}
+                        <div class="fruits-badge fruits-discount-badge">خصم {{ product.discount }}%</div>
+                        {% endif %}
+                        <div class="fruits-badge fruits-fresh-badge">طازج ولذيذ</div>
+                        <div class="fruits-badge fruits-vitamin-badge">غني بالفيتامينات</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fruits-product-info">
+                <div class="fruits-header">
+                    <h1 class="fruits-title">{{ product.name }}</h1>
+                    <p class="fruits-brand">من {{ product.brand }}</p>
+                    
+                    <div class="fruits-rating">
+                        <div class="fruits-stars">⭐⭐⭐⭐⭐</div>
+                        <span>({{ (product.id * 13) % 80 + 30 }} تقييم)</span>
+                    </div>
+                </div>
+
+                <div class="fruits-pricing">
+                    {% if product.discount > 0 %}
+                    <span class="fruits-price-original">${{ "%.2f"|format(product.price) }}</span>
+                    <span class="fruits-price-current">${{ "%.2f"|format(product.price * (1 - product.discount / 100)) }}</span>
+                    <div class="fruits-savings">وفر ${{ "%.2f"|format(product.price * product.discount / 100) }}</div>
+                    {% else %}
+                    <span class="fruits-price-current">${{ "%.2f"|format(product.price) }}</span>
+                    {% endif %}
+                    <span style="font-size: 1rem; color: #666;">/ كيلو</span>
+                </div>
+
+                <div class="fruits-cart-section">
+                    <form action="{{ url_for('add_to_cart') }}" method="POST">
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        
+                        <div class="fruits-quantity-selector">
+                            <button type="button" class="fruits-qty-btn minus">−</button>
+                            <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" 
+                                   class="fruits-qty-input" id="fruits-quantity">
+                            <button type="button" class="fruits-qty-btn plus">+</button>
+                        </div>
+
+                        <button type="submit" class="fruits-add-cart-btn" {% if product.stock == 0 %}disabled{% endif %}>
+                            {% if product.stock == 0 %}
+                                نفد من المخزون
+                            {% else %}
+                                🛒 أضف إلى العربة
+                            {% endif %}
+                        </button>
+                    </form>
+                </div>
+
+                <div style="background: var(--fruits-light); padding: 2rem; border-radius: 15px; margin-top: 2rem; border: 1px solid rgba(255, 87, 34, 0.2);">
+                    <h4 style="color: var(--fruits-dark); margin-bottom: 1rem;">🍎 الفوائد الغذائية:</h4>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                        <div style="text-align: center; padding: 0.5rem; background: white; border-radius: 8px;">🌟 فيتامين سي</div>
+                        <div style="text-align: center; padding: 0.5rem; background: white; border-radius: 8px;">🧠 ألياف طبيعية</div>
+                        <div style="text-align: center; padding: 0.5rem; background: white; border-radius: 8px;">💪 مضادات أكسدة</div>
+                        <div style="text-align: center; padding: 0.5rem; background: white; border-radius: 8px;">❤️ بوتاسيوم</div>
+                    </div>
+                    <p><strong>الوصف:</strong> {{ product.description }}</p>
+                    {% if product.stock > 10 %}
+                    <p style="color: var(--fruits-primary); font-weight: 600;">✅ متوفر في المخزون</p>
+                    {% elif product.stock > 0 %}
+                    <p style="color: #FF9800; font-weight: 600;">⚠️ باقي {{ product.stock }} كيلو فقط</p>
+                    {% else %}
+                    <p style="color: #F44336; font-weight: 600;">❌ نفد من المخزون</p>
+                    {% endif %}
+                    <div style="margin-top: 1rem; padding: 1rem; background: rgba(255, 87, 34, 0.1); border-radius: 10px;">
+                        <p style="color: var(--fruits-dark); font-weight: 500; font-size: 0.95rem; margin: 0;">
+                            🌱 طبيعي 100% • 🚫 خالي من المبيدات • 🥶 يُحفظ في مكان بارد وجاف
+                        </p>
+                    </div>
+                    <div style="margin-top: 1rem; padding: 1rem; background: rgba(76, 175, 80, 0.1); border-radius: 10px;">
+                        <p style="color: #4CAF50; font-weight: 600; font-size: 0.9rem; margin: 0;">
+                            💡 نصيحة: يُفضل تناوله في موسم الحصاد للحصول على أفضل طعم ونكهة
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if similar_products %}
+<section style="padding: 4rem 0; background: var(--fruits-bg);">
+    <div class="container">
+        <h2 style="text-align: center; font-size: 2.5rem; font-weight: 700; color: var(--fruits-dark); margin-bottom: 3rem;">
+            🍎 فواكه أخرى طازجة
+        </h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+            {% for similar in similar_products %}
+            <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: var(--fruits-shadow); transition: transform 0.3s ease; border: 1px solid rgba(255, 87, 34, 0.1);">
+                <div style="height: 200px; background: var(--fruits-light); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+                    {% if 'تفاح جالا' in similar.name or 'تفاح' in similar.name %}
+                    <img src="{{ url_for('static', filename='img/products/fruits/تفاح جالا.webp') }}" alt="{{ similar.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    {% elif 'موز' in similar.name %}
+                    <img src="{{ url_for('static', filename='img/products/fruits/موز.jpg') }}" alt="{{ similar.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    {% elif 'فراولة' in similar.name %}
+                    <img src="{{ url_for('static', filename='img/products/fruits/فراولة.webp') }}" alt="{{ similar.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    {% elif 'عبوة برتقال' in similar.name or 'برتقال' in similar.name %}
+                    <img src="{{ url_for('static', filename='img/products/fruits/عبوة برتقال.webp') }}" alt="{{ similar.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    {% elif 'توت أزرق' in similar.name or 'توت' in similar.name %}
+                    <img src="{{ url_for('static', filename='img/products/fruits/توت أزرق.jpg') }}" alt="{{ similar.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    {% else %}
+                    <span style="font-size: 4rem;">🍎</span>
+                    {% endif %}
+                </div>
+                <div style="padding: 1.5rem;">
+                    <h3 style="font-weight: 600; margin-bottom: 0.5rem; color: var(--fruits-dark);">{{ similar.name }}</h3>
+                    <p style="color: #666; margin-bottom: 1rem;">{{ similar.brand }}</p>
+                    <div style="font-size: 1.4rem; font-weight: 700; color: var(--fruits-primary); margin-bottom: 1rem;">
+                        ${{ "%.2f"|format(similar.price * (1 - similar.discount / 100)) }}
+                    </div>
+                    <form action="{{ url_for('add_to_cart') }}" method="POST">
+                        <input type="hidden" name="product_id" value="{{ similar.id }}">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" style="width: 100%; background: var(--fruits-gradient); color: white; border: none; padding: 1rem; border-radius: 12px; font-weight: 600; cursor: pointer; transition: transform 0.3s ease;">
+                            أضف للعربة
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelector('.fruits-qty-btn.plus').addEventListener('click', function() {
+    const input = document.getElementById('fruits-quantity');
+    const max = parseInt(input.getAttribute('max'));
+    const current = parseInt(input.value);
+    if (current < max) {
+        input.value = current + 1;
+    }
+});
+
+document.querySelector('.fruits-qty-btn.minus').addEventListener('click', function() {
+    const input = document.getElementById('fruits-quantity');
+    const current = parseInt(input.value);
+    if (current > 1) {
+        input.value = current - 1;
+    }
+});
+</script>
+{% endblock %}

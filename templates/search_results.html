@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results for "{{ query }}" - FreshMart{% endblock %}
+
+{% block content %}
+<!-- Search Results Header -->
+<section class="search-header">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="{{ url_for('index') }}">Home</a>
+            <span class="breadcrumb-separator">›</span>
+            <span class="current-page">Search Results</span>
+        </div>
+        <h1 class="search-title">Search Results for "{{ query }}"</h1>
+        <p class="search-count">{{ results|length }} products found</p>
+    </div>
+</section>
+
+<!-- Search Results -->
+<section class="search-results">
+    <div class="container">
+        {% if results %}
+        <div class="products-grid">
+            {% for product in results %}
+            <div class="product-card">
+                {% if product.discount > 0 %}
+                <div class="product-badge discount-badge">-{{ product.discount }}%</div>
+                {% endif %}
+                {% if product.stock <= 5 %}
+                <div class="product-badge stock-badge">Low Stock</div>
+                {% endif %}
+                
+                <div class="product-image">
+                    <span class="product-placeholder">📦</span>
+                    <div class="product-overlay">
+                        <a href="{{ url_for('product_detail', product_id=product.id) }}" class="overlay-btn">Quick View</a>
+                    </div>
+                </div>
+                
+                <div class="product-info">
+                    <h3 class="product-name">
+                        <a href="{{ url_for('product_detail', product_id=product.id) }}">{{ product.name }}</a>
+                    </h3>
+                    <p class="product-brand">{{ product.brand }}</p>
+                    <p class="product-category">
+                        <a href="{{ url_for('category', category_name=product.category) }}">{{ categories[product.category].name }}</a>
+                    </p>
+                    <p class="product-description">{{ product.description[:80] }}{% if product.description|length > 80 %}...{% endif %}</p>
+                    
+                    <div class="product-price">
+                        {% if product.discount > 0 %}
+                        <span class="price-original">${{ "%.2f"|format(product.price) }}</span>
+                        <span class="price-discounted">${{ "%.2f"|format(product.price * (1 - product.discount / 100)) }}</span>
+                        {% else %}
+                        <span class="price">${{ "%.2f"|format(product.price) }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="product-actions">
+                        <form action="{{ url_for('add_to_cart') }}" method="POST" class="add-to-cart-form">
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="btn btn-primary btn-cart" {% if product.stock == 0 %}disabled{% endif %}>
+                                {% if product.stock == 0 %}Out of Stock{% else %}Add to Cart{% endif %}
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="product-meta">
+                        <span class="stock-indicator {% if product.stock > 10 %}in-stock{% elif product.stock > 0 %}low-stock{% else %}out-stock{% endif %}">
+                            {% if product.stock > 10 %}
+                                ✓ In Stock
+                            {% elif product.stock > 0 %}
+                                ⚠️ Only {{ product.stock }} left
+                            {% else %}
+                                ❌ Out of Stock
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-results">
+            <div class="no-results-icon">🔍</div>
+            <h3>No products found for "{{ query }}"</h3>
+            <p>Try searching with different keywords or browse our categories.</p>
+            
+            <div class="search-suggestions">
+                <h4>Search suggestions:</h4>
+                <ul class="suggestion-list">
+                    <li>Check your spelling</li>
+                    <li>Try more general keywords</li>
+                    <li>Use fewer keywords</li>
+                    <li>Browse our categories below</li>
+                </ul>
+            </div>
+            
+            <div class="category-suggestions">
+                <h4>Popular Categories:</h4>
+                <div class="category-grid-small">
+                    {% for category_key, category in categories.items()[:6] %}
+                    <a href="{{ url_for('category', category_name=category_key) }}" class="category-suggestion">
+                        <span class="category-icon">{{ category.icon }}</span>
+                        <span class="category-name">{{ category.name }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="search-actions">
+                <a href="{{ url_for('index') }}" class="btn btn-primary">Back to Home</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Search Tips -->
+<section class="search-tips">
+    <div class="container">
+        <div class="tips-content">
+            <h3>Search Tips</h3>
+            <div class="tips-grid">
+                <div class="tip">
+                    <span class="tip-icon">🔤</span>
+                    <div class="tip-content">
+                        <h4>Use specific terms</h4>
+                        <p>Try "organic apples" instead of just "fruit"</p>
+                    </div>
+                </div>
+                <div class="tip">
+                    <span class="tip-icon">🏷️</span>
+                    <div class="tip-content">
+                        <h4>Search by brand</h4>
+                        <p>Find products from your favorite brands</p>
+                    </div>
+                </div>
+                <div class="tip">
+                    <span class="tip-icon">📂</span>
+                    <div class="tip-content">
+                        <h4>Browse categories</h4>
+                        <p>Explore our organized product categories</p>
+                    </div>
+                </div>
+                <div class="tip">
+                    <span class="tip-icon">🏷️</span>
+                    <div class="tip-content">
+                        <h4>Check deals</h4>
+                        <p>Don't miss our special offers and discounts</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,335 @@
+{% extends "base.html" %}
+
+{% block title %}فريش مارت - بقالة طازجة مُوصلة{% endblock %}
+
+{% block content %}
+<!-- قسم البطل -->
+<section class="hero">
+    <div class="hero-slider">
+        <div class="hero-slide active">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <h1 class="hero-title">بقالة طازجة<br>مُوصلة إلى باب منزلك</h1>
+                        <p class="hero-subtitle">تسوق من مجموعتنا الواسعة من المنتجات الطازجة واللحوم عالية الجودة والمستلزمات المنزلية</p>
+                        <div class="hero-actions">
+                            <a href="#categories" class="btn btn-primary btn-large">تسوق الآن</a>
+                        </div>
+                    </div>
+                    <div class="hero-image">
+                        <div class="hero-graphic">
+                            <div class="floating-icon">🛒</div>
+                            <div class="floating-icon">🥕</div>
+                            <div class="floating-icon">🍎</div>
+                            <div class="floating-icon">🥛</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-slide">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <h1 class="hero-title">عروض خاصة<br>خصم يصل إلى 25%</h1>
+                        <p class="hero-subtitle">لا تفوت عروضنا المذهلة على الفواكه والخضروات الطازجة وأكثر!</p>
+                        <div class="hero-actions">
+                            <a href="#deals" class="btn btn-secondary btn-large">عرض الصفقات</a>
+                        </div>
+                    </div>
+                    <div class="hero-image">
+                        <div class="hero-graphic">
+                            <div class="floating-icon">💰</div>
+                            <div class="floating-icon">🎉</div>
+                            <div class="floating-icon">🛍️</div>
+                            <div class="floating-icon">✨</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hero-nav">
+        <button class="hero-nav-btn active" data-slide="0" aria-label="شريحة 1"></button>
+        <button class="hero-nav-btn" data-slide="1" aria-label="شريحة 2"></button>
+    </div>
+</section>
+
+<!-- قسم الفئات -->
+<section class="categories-section" id="categories">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">تسوق بحسب الفئة</h2>
+            <p class="section-subtitle">اعثر على كل ما تحتاجه في أقسامنا المنظمة</p>
+        </div>
+        <div class="categories-grid">
+            {% for category_key, category in categories.items() %}
+            {% if category_key == 'vegetables' %}
+            <a href="{{ url_for('vegetables') }}" class="category-card">
+            {% elif category_key == 'fruits' %}
+            <a href="{{ url_for('fruits') }}" class="category-card">
+            {% elif category_key == 'legumes' %}
+            <a href="{{ url_for('legumes') }}" class="category-card">
+            {% elif category_key == 'dairy' %}
+            <a href="{{ url_for('dairy') }}" class="category-card">
+            {% elif category_key == 'bakery' %}
+            <a href="{{ url_for('bakery') }}" class="category-card">
+            {% elif category_key == 'beverages' %}
+            <a href="{{ url_for('beverages') }}" class="category-card">
+            {% elif category_key == 'household' %}
+            <a href="{{ url_for('household') }}" class="category-card">
+            {% elif category_key == 'snacks' %}
+            <a href="{{ url_for('snacks') }}" class="category-card">
+            {% elif category_key == 'frozen' %}
+            <a href="{{ url_for('frozen') }}" class="category-card">
+            {% else %}
+            <a href="{{ url_for('category', category_name=category_key) }}" class="category-card">
+            {% endif %}
+                <div class="category-icon">{{ category.icon }}</div>
+                <h3 class="category-name">{{ category.name }}</h3>
+                <div class="category-hover">
+                    <span class="shop-now">تسوق الآن ←</span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- قسم المنتجات المميزة -->
+<section class="featured-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">منتجات مميزة</h2>
+            <p class="section-subtitle">أشهر منتجاتنا هذا الأسبوع</p>
+        </div>
+        <div class="products-grid">
+            {% for product in featured_products %}
+            <div class="product-card featured-product">
+                <div class="product-badge">⭐ مميز</div>
+                {% if product.discount > 0 %}
+                <div class="product-badge discount-badge">-{{ product.discount }}%</div>
+                {% endif %}
+                
+                <div class="product-image">
+                    {% if 'تفاح جالا' in product.name %}
+                        <img src="{{ url_for('static', filename='img/products/home page/تفاح جالا.webp') }}" alt="{{ product.name }}" class="product-img">
+                    {% elif 'توت أزرق' in product.name %}
+                        <img src="{{ url_for('static', filename='img/products/home page/توت أزرق.jpg') }}" alt="{{ product.name }}" class="product-img">
+                    {% elif 'جزر طازج' in product.name %}
+                        <img src="{{ url_for('static', filename='img/products/home page/جزر طازج.jpg') }}" alt="{{ product.name }}" class="product-img">
+                    {% elif 'زبادي يوناني' in product.name %}
+                        <img src="{{ url_for('static', filename='img/products/home page/زبادي يوناني.webp') }}" alt="{{ product.name }}" class="product-img">
+                    {% elif 'طماطم كرزية' in product.name %}
+                        <img src="{{ url_for('static', filename='img/products/home page/طماطم كرزية.jpg') }}" alt="{{ product.name }}" class="product-img">
+                    {% elif 'موز' in product.name %}
+                        <img src="{{ url_for('static', filename='img/products/home page/موز.jpg') }}" alt="{{ product.name }}" class="product-img">
+                    {% elif 'فراولة' in product.name %}
+                        <img src="{{ url_for('static', filename='img/products/home page/فراولة.webp') }}" alt="{{ product.name }}" class="product-img">
+                    {% elif 'فلفل رومي' in product.name %}
+                        <img src="{{ url_for('static', filename='img/products/home page/فلفل رومي.jpg') }}" alt="{{ product.name }}" class="product-img">
+                    {% else %}
+                        <span class="product-placeholder">📦</span>
+                    {% endif %}
+                    <div class="product-overlay">
+                        <a href="{{ url_for('product_detail', product_id=product.id) }}" class="overlay-btn">عرض سريع</a>
+                    </div>
+                </div>
+                
+                <div class="product-info">
+                    <h3 class="product-name">
+                        <a href="{{ url_for('product_detail', product_id=product.id) }}">{{ product.name }}</a>
+                    </h3>
+                    <p class="product-brand">{{ product.brand }}</p>
+                    
+                    <div class="product-rating">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <span class="rating-count">({{ (loop.index * 7) % 50 + 10 }})</span>
+                    </div>
+                    
+                    <div class="product-price">
+                        {% if product.discount > 0 %}
+                        <span class="price-original">${{ "%.2f"|format(product.price) }}</span>
+                        <span class="price-discounted">${{ "%.2f"|format(product.price * (1 - product.discount / 100)) }}</span>
+                        {% else %}
+                        <span class="price">${{ "%.2f"|format(product.price) }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="product-actions">
+                        <form action="{{ url_for('add_to_cart') }}" method="POST" class="add-to-cart-form">
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <div class="quantity-selector">
+                                <button type="button" class="qty-btn minus">-</button>
+                                <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" class="qty-input">
+                                <button type="button" class="qty-btn plus">+</button>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-cart">
+                                <span class="btn-text">أضف للعربة</span>
+                                <span class="btn-icon">🛒</span>
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="product-meta">
+                        <span class="stock-indicator {% if product.stock > 10 %}in-stock{% elif product.stock > 0 %}low-stock{% else %}out-stock{% endif %}">
+                            {% if product.stock > 10 %}
+                                ✅ متوفر
+                            {% elif product.stock > 0 %}
+                                ⚠️ باقي {{ product.stock }} قطع
+                            {% else %}
+                                ❌ نفد المخزون
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- قسم الصفقات -->
+<section class="deals-section" id="deals">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">🔥 عروض مميزة</h2>
+            <p class="section-subtitle">عروض محدودة الوقت لا تفوتها</p>
+        </div>
+        <div class="deals-grid">
+            {% for product in discounted_products %}
+            <div class="deal-card">
+                <div class="deal-badge">{{ product.discount }}% خصم</div>
+                <div class="deal-image">
+                    {% if 'تفاح جالا' in product.name %}
+                        <img src="{{ url_for('static', filename='img/products/home page/تفاح جالا.webp') }}" alt="{{ product.name }}" class="deal-img">
+                    {% elif 'توت أزرق' in product.name %}
+                        <img src="{{ url_for('static', filename='img/products/home page/توت أزرق.jpg') }}" alt="{{ product.name }}" class="deal-img">
+                    {% elif 'جزر طازج' in product.name %}
+                        <img src="{{ url_for('static', filename='img/products/home page/جزر طازج.jpg') }}" alt="{{ product.name }}" class="deal-img">
+                    {% elif 'زبادي يوناني' in product.name %}
+                        <img src="{{ url_for('static', filename='img/products/home page/زبادي يوناني.webp') }}" alt="{{ product.name }}" class="deal-img">
+                    {% elif 'طماطم كرزية' in product.name %}
+                        <img src="{{ url_for('static', filename='img/products/home page/طماطم كرزية.jpg') }}" alt="{{ product.name }}" class="deal-img">
+                    {% elif 'موز' in product.name %}
+                        <img src="{{ url_for('static', filename='img/products/home page/موز.jpg') }}" alt="{{ product.name }}" class="deal-img">
+                    {% elif 'فراولة' in product.name %}
+                        <img src="{{ url_for('static', filename='img/products/home page/فراولة.webp') }}" alt="{{ product.name }}" class="deal-img">
+                    {% elif 'فلفل رومي' in product.name %}
+                        <img src="{{ url_for('static', filename='img/products/home page/فلفل رومي.jpg') }}" alt="{{ product.name }}" class="deal-img">
+                    {% else %}
+                        <span class="product-placeholder">📦</span>
+                    {% endif %}
+                    <div class="deal-timer">
+                        <span class="timer-icon">⏰</span>
+                        <span class="timer-text">ينتهي قريباً</span>
+                    </div>
+                </div>
+                <div class="deal-info">
+                    <h3 class="deal-name">{{ product.name }}</h3>
+                    <p class="deal-brand">{{ product.brand }}</p>
+                    <div class="deal-prices">
+                        <span class="price-original">${{ "%.2f"|format(product.price) }}</span>
+                        <span class="price-deal">${{ "%.2f"|format(product.price * (1 - product.discount / 100)) }}</span>
+                    </div>
+                    <p class="deal-savings">
+                        <span class="savings-icon">💰</span>
+                        وفر ${{ "%.2f"|format(product.price * product.discount / 100) }}
+                    </p>
+                    <form action="{{ url_for('add_to_cart') }}" method="POST" class="deal-form add-to-cart-form">
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="btn btn-accent btn-deal">
+                            <span class="btn-text">احصل على العرض</span>
+                            <span class="btn-icon">🛒</span>
+                        </button>
+                    </form>
+                    <div class="stock-urgency">
+                        <div class="urgency-bar">
+                            <div class="urgency-fill" style="width: {{ (product.stock / 20 * 100)|round }}%"></div>
+                        </div>
+                        <span class="urgency-text">باقي {{ product.stock }} قطعة فقط!</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- قسم الميزات -->
+<section class="features-section">
+    <div class="container">
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🚚</div>
+                <h3 class="feature-title">توصيل مجاني</h3>
+                <p class="feature-text">توصيل مجاني على الطلبات أكثر من $50</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🕒</div>
+                <h3 class="feature-title">توصيل في نفس اليوم</h3>
+                <p class="feature-text">اطلب قبل الساعة 2 ظهراً للتوصيل في نفس اليوم</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🥬</div>
+                <h3 class="feature-title">ضمان الطزاجة</h3>
+                <p class="feature-text">100% طازج أو استرداد المال</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💳</div>
+                <h3 class="feature-title">دفع آمن</h3>
+                <p class="feature-text">مدفوعات آمنة عبر الإنترنت</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- قسش النشرة الإخبارية -->
+<section class="newsletter-section">
+    <div class="container">
+        <div class="newsletter-content">
+            <div class="newsletter-text">
+                <h2 class="newsletter-title">ابق على تواصل مع فريش مارت</h2>
+                <p class="newsletter-subtitle">احصل على عروض أسبوعية وتحديثات المنتجات الطازجة في صندوق بريدك</p>
+            </div>
+            <form class="newsletter-form">
+                <input type="email" placeholder="أدخل عنوان بريدك الإلكتروني" class="newsletter-input">
+                <button type="submit" class="btn btn-primary">اشترك 📧</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Hero slider functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const slides = document.querySelectorAll('.hero-slide');
+        const navBtns = document.querySelectorAll('.hero-nav-btn');
+        let currentSlide = 0;
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            navBtns.forEach(btn => btn.classList.remove('active'));
+            
+            slides[index].classList.add('active');
+            navBtns[index].classList.add('active');
+        }
+
+        navBtns.forEach((btn, index) => {
+            btn.addEventListener('click', () => {
+                currentSlide = index;
+                showSlide(currentSlide);
+            });
+        });
+
+        // Auto-slide every 5 seconds
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }, 5000);
+    });
+</script>
+{% endblock %}

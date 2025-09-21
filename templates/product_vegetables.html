@@ -1,0 +1,439 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - فريش مارت{% endblock %}
+
+{% block extra_css %}
+<style>
+:root {
+    --veg-primary: #4CAF50;
+    --veg-secondary: #66BB6A;
+    --veg-light: #E8F5E8;
+    --veg-bg: #F1F8E9;
+    --veg-dark: #2E7D32;
+    --veg-gradient: linear-gradient(135deg, #4CAF50, #66BB6A);
+    --veg-shadow: 0 8px 32px rgba(76, 175, 80, 0.3);
+}
+
+.vegetables-hero {
+    background: linear-gradient(135deg, var(--veg-light) 0%, #C8E6C9 100%);
+    padding: 2rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.vegetables-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="vegPattern" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(76,175,80,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23vegPattern)"/></svg>');
+    opacity: 0.5;
+}
+
+.vegetables-breadcrumb {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 1rem;
+    border-radius: 25px;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 2;
+}
+
+.vegetables-breadcrumb a {
+    color: var(--veg-dark);
+    text-decoration: none;
+    font-weight: 500;
+    margin: 0 0.5rem;
+}
+
+.vegetables-product-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 0;
+    background: white;
+}
+
+.vegetables-main-image {
+    width: 100%;
+    height: 500px;
+    background: linear-gradient(135deg, var(--veg-light), #C8E6C9);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--veg-shadow);
+    margin-bottom: 1.5rem;
+}
+
+.vegetables-main-image::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+    transform: rotate(45deg);
+    animation: vegetableShine 4s infinite;
+}
+
+@keyframes vegetableShine {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+}
+
+.vegetables-placeholder {
+    font-size: 8rem;
+    color: var(--veg-primary);
+    animation: vegetableFloat 3s ease-in-out infinite;
+}
+
+.vegetables-product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+    transition: transform 0.3s ease;
+}
+
+.vegetables-main-image:hover .vegetables-product-img {
+    transform: scale(1.05);
+}
+
+@keyframes vegetableFloat {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    25% { transform: translateY(-10px) rotate(2deg); }
+    75% { transform: translateY(-5px) rotate(-1deg); }
+}
+
+.vegetables-badges {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.vegetables-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.vegetables-discount-badge {
+    background: linear-gradient(135deg, #FF5722, #F44336);
+    color: white;
+}
+
+.vegetables-fresh-badge {
+    background: linear-gradient(135deg, var(--veg-primary), var(--veg-secondary));
+    color: white;
+}
+
+.vegetables-header {
+    text-align: center;
+    padding: 2rem;
+    background: linear-gradient(135deg, var(--veg-light), rgba(255,255,255,0.9));
+    border-radius: 20px;
+    margin-bottom: 2rem;
+}
+
+.vegetables-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--veg-dark);
+    margin-bottom: 0.5rem;
+}
+
+.vegetables-brand {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.vegetables-rating {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.vegetables-stars {
+    font-size: 1.5rem;
+    color: #FFD700;
+}
+
+.vegetables-pricing {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: var(--veg-shadow);
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.vegetables-price-current {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--veg-primary);
+    display: block;
+}
+
+.vegetables-price-original {
+    font-size: 1.2rem;
+    color: #999;
+    text-decoration: line-through;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.vegetables-savings {
+    background: linear-gradient(135deg, #FF5722, #F44336);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    margin-top: 1rem;
+    display: inline-block;
+}
+
+.vegetables-cart-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: var(--veg-shadow);
+}
+
+.vegetables-quantity-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: var(--veg-light);
+    padding: 1rem;
+    border-radius: 15px;
+    margin-bottom: 1rem;
+}
+
+.vegetables-qty-btn {
+    width: 50px;
+    height: 50px;
+    border: none;
+    background: var(--veg-gradient);
+    color: white;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.vegetables-qty-btn:hover {
+    transform: scale(1.1);
+}
+
+.vegetables-qty-input {
+    width: 100px;
+    height: 50px;
+    text-align: center;
+    border: 2px solid var(--veg-primary);
+    border-radius: 12px;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.vegetables-add-cart-btn {
+    width: 100%;
+    background: var(--veg-gradient);
+    color: white;
+    border: none;
+    padding: 1.5rem;
+    border-radius: 15px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--veg-shadow);
+}
+
+.vegetables-add-cart-btn:hover {
+    transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+    .vegetables-product-layout {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .vegetables-title {
+        font-size: 2rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="vegetables-hero">
+    <div class="vegetables-breadcrumb">
+        <div class="container">
+            <a href="{{ url_for('index') }}">🏠 الرئيسية</a>
+            <span>›</span>
+            <a href="{{ url_for('vegetables') }}">🥕 الخضروات</a>
+            <span>›</span>
+            <span>{{ product.name }}</span>
+        </div>
+    </div>
+</section>
+
+<section class="vegetables-product-main">
+    <div class="container">
+        <div class="vegetables-product-layout">
+            <div class="vegetables-product-images">
+                <div class="vegetables-main-image">
+                    {% if 'جزر طازج' in product.name %}
+                        <img src="{{ url_for('static', filename='img/products/vegetables/جزر طازج.jpg') }}" alt="{{ product.name }}" class="vegetables-product-img">
+                    {% elif 'طماطم كرزية' in product.name %}
+                        <img src="{{ url_for('static', filename='img/products/vegetables/طماطم كرزية.jpg') }}" alt="{{ product.name }}" class="vegetables-product-img">
+                    {% elif 'فلفل رومي' in product.name %}
+                        <img src="{{ url_for('static', filename='img/products/vegetables/فلفل رومي.jpg') }}" alt="{{ product.name }}" class="vegetables-product-img">
+                    {% elif 'أوراق السبانخ' in product.name %}
+                        <img src="{{ url_for('static', filename='img/products/vegetables/أوراق السبانخ.webp') }}" alt="{{ product.name }}" class="vegetables-product-img">
+                    {% elif 'بروكلي' in product.name %}
+                        <img src="{{ url_for('static', filename='img/products/vegetables/بروكلي.webp') }}" alt="{{ product.name }}" class="vegetables-product-img">
+                    {% else %}
+                        <span class="vegetables-placeholder">🥕</span>
+                    {% endif %}
+                    
+                    <div class="vegetables-badges">
+                        {% if product.discount > 0 %}
+                        <div class="vegetables-badge vegetables-discount-badge">خصم {{ product.discount }}%</div>
+                        {% endif %}
+                        <div class="vegetables-badge vegetables-fresh-badge">طازج 100%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="vegetables-product-info">
+                <div class="vegetables-header">
+                    <h1 class="vegetables-title">{{ product.name }}</h1>
+                    <p class="vegetables-brand">من {{ product.brand }}</p>
+                    
+                    <div class="vegetables-rating">
+                        <div class="vegetables-stars">⭐⭐⭐⭐⭐</div>
+                        <span>({{ (product.id * 7) % 50 + 15 }} تقييم)</span>
+                    </div>
+                </div>
+
+                <div class="vegetables-pricing">
+                    {% if product.discount > 0 %}
+                    <span class="vegetables-price-original">${{ "%.2f"|format(product.price) }}</span>
+                    <span class="vegetables-price-current">${{ "%.2f"|format(product.price * (1 - product.discount / 100)) }}</span>
+                    <div class="vegetables-savings">وفر ${{ "%.2f"|format(product.price * product.discount / 100) }}</div>
+                    {% else %}
+                    <span class="vegetables-price-current">${{ "%.2f"|format(product.price) }}</span>
+                    {% endif %}
+                    <span style="font-size: 1rem; color: #666;">/ كيلو</span>
+                </div>
+
+                <div class="vegetables-cart-section">
+                    <form action="{{ url_for('add_to_cart') }}" method="POST">
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        
+                        <div class="vegetables-quantity-selector">
+                            <button type="button" class="vegetables-qty-btn minus">−</button>
+                            <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" 
+                                   class="vegetables-qty-input" id="vegetable-quantity">
+                            <button type="button" class="vegetables-qty-btn plus">+</button>
+                        </div>
+
+                        <button type="submit" class="vegetables-add-cart-btn" {% if product.stock == 0 %}disabled{% endif %}>
+                            {% if product.stock == 0 %}
+                                نفد من المخزون
+                            {% else %}
+                                🛒 أضف إلى العربة
+                            {% endif %}
+                        </button>
+                    </form>
+                </div>
+
+                <div style="background: var(--veg-light); padding: 1.5rem; border-radius: 15px; margin-top: 1rem;">
+                    <p><strong>الوصف:</strong> {{ product.description }}</p>
+                    {% if product.stock > 10 %}
+                    <p style="color: var(--veg-primary); font-weight: 600;">✅ متوفر في المخزون</p>
+                    {% elif product.stock > 0 %}
+                    <p style="color: #FF9800; font-weight: 600;">⚠️ باقي {{ product.stock }} قطع فقط</p>
+                    {% else %}
+                    <p style="color: #F44336; font-weight: 600;">❌ نفد من المخزون</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if similar_products %}
+<section style="padding: 4rem 0; background: var(--veg-bg);">
+    <div class="container">
+        <h2 style="text-align: center; font-size: 2.5rem; font-weight: 700; color: var(--veg-dark); margin-bottom: 3rem;">
+            🥬 منتجات مشابهة
+        </h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+            {% for similar in similar_products %}
+            <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: var(--veg-shadow); transition: transform 0.3s ease;">
+                <div style="height: 200px; background: var(--veg-light); display: flex; align-items: center; justify-content: center; font-size: 4rem;">
+                    🥕
+                </div>
+                <div style="padding: 1.5rem;">
+                    <h3 style="font-weight: 600; margin-bottom: 0.5rem;">{{ similar.name }}</h3>
+                    <p style="color: #666; margin-bottom: 1rem;">{{ similar.brand }}</p>
+                    <div style="font-size: 1.3rem; font-weight: 700; color: var(--veg-primary); margin-bottom: 1rem;">
+                        ${{ "%.2f"|format(similar.price * (1 - similar.discount / 100)) }}
+                    </div>
+                    <form action="{{ url_for('add_to_cart') }}" method="POST">
+                        <input type="hidden" name="product_id" value="{{ similar.id }}">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" style="width: 100%; background: var(--veg-gradient); color: white; border: none; padding: 1rem; border-radius: 12px; font-weight: 600; cursor: pointer;">
+                            أضف للعربة
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelector('.vegetables-qty-btn.plus').addEventListener('click', function() {
+    const input = document.getElementById('vegetable-quantity');
+    const max = parseInt(input.getAttribute('max'));
+    const current = parseInt(input.value);
+    if (current < max) {
+        input.value = current + 1;
+    }
+});
+
+document.querySelector('.vegetables-qty-btn.minus').addEventListener('click', function() {
+    const input = document.getElementById('vegetable-quantity');
+    const current = parseInt(input.value);
+    if (current > 1) {
+        input.value = current - 1;
+    }
+});
+</script>
+{% endblock %}

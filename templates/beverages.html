@@ -1,0 +1,437 @@
+{% extends "base.html" %}
+
+{% block title %}المشروبات المنعشة - فريش مارت{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Modern Beverages Page */
+.beverages-hero {
+    background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 50%, #90CAF9 100%);
+    padding: var(--space-20) 0;
+    position: relative;
+    overflow: hidden;
+    color: #0D47A1;
+}
+
+.beverages-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('https://images.unsplash.com/photo-1544145945-f90425340c7e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center/cover;
+    opacity: 0.15;
+    z-index: 1;
+}
+
+.beverages-hero::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(33, 150, 243, 0.2) 0%, transparent 70%);
+    animation: heroFloat 35s linear infinite;
+    z-index: 2;
+}
+
+@keyframes heroFloat {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.05); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
+.beverages-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: var(--space-16);
+    position: relative;
+    z-index: 3;
+}
+
+.beverages-title {
+    font-size: var(--text-6xl);
+    font-weight: var(--font-bold);
+    margin-bottom: var(--space-6);
+    text-shadow: 2px 2px 4px rgba(33,150,243,0.3);
+}
+
+.beverages-visual {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+}
+
+.beverages-icon-large {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(33, 150, 243, 0.4);
+    animation: floatIcon 6s ease-in-out infinite;
+}
+
+@keyframes floatIcon {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.beverages-content {
+    padding: var(--space-16) 0;
+    background: linear-gradient(135deg, #F3E5F5 0%, #2196F3 5%, #F3E5F5 100%);
+}
+
+.beverages-filters {
+    background: white;
+    border-radius: var(--radius-2xl);
+    padding: var(--space-8);
+    margin-bottom: var(--space-12);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    border: 1px solid rgba(33, 150, 243, 0.1);
+}
+
+.filters-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr auto;
+    gap: var(--space-4);
+    align-items: end;
+}
+
+.filter-input-beverages,
+.filter-select-beverages {
+    width: 100%;
+    padding: var(--space-4);
+    border: 2px solid var(--neutral-200);
+    border-radius: var(--radius-lg);
+    font-family: inherit;
+    font-size: var(--text-sm);
+    transition: all var(--transition-base);
+}
+
+.filter-input-beverages:focus,
+.filter-select-beverages:focus {
+    outline: none;
+    border-color: #2196F3;
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+}
+
+.filter-btn {
+    padding: var(--space-4) var(--space-6);
+    background: linear-gradient(135deg, #2196F3, #1976D2);
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-weight: var(--font-medium);
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.filter-btn:hover {
+    background: linear-gradient(135deg, #1976D2, #1565C0);
+    transform: translateY(-2px);
+}
+
+.beverages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-8);
+}
+
+.beverage-card {
+    background: white;
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    transition: all var(--transition-base);
+    border: 1px solid rgba(33, 150, 243, 0.1);
+    position: relative;
+}
+
+.beverage-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #2196F3, #03A9F4, #00BCD4);
+}
+
+.beverage-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 60px rgba(33, 150, 243, 0.15);
+}
+
+.beverage-image {
+    height: 200px;
+    background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.beverage-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-base);
+}
+
+.beverage-card:hover .beverage-image img {
+    transform: scale(1.05);
+}
+
+.beverage-badges {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.beverage-badge {
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: var(--font-bold);
+    text-transform: uppercase;
+}
+
+.badge-fresh {
+    background: linear-gradient(135deg, #4CAF50, #388E3C);
+    color: white;
+}
+
+.badge-energy {
+    background: linear-gradient(135deg, #FF9800, #F57C00);
+    color: white;
+}
+
+.badge-sale {
+    background: linear-gradient(135deg, #F44336, #D32F2F);
+    color: white;
+}
+
+.beverage-info {
+    padding: var(--space-6);
+}
+
+.beverage-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-4);
+}
+
+.beverage-name {
+    font-size: var(--text-lg);
+    font-weight: var(--font-bold);
+    color: var(--neutral-800);
+    margin: 0;
+}
+
+.beverage-price {
+    font-size: var(--text-xl);
+    font-weight: var(--font-bold);
+    color: #1976D2;
+}
+
+.beverage-nutrients {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+}
+
+.nutrient-tag {
+    background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+    color: #1976D2;
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+}
+
+.beverage-actions {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+}
+
+.add-to-cart-btn {
+    flex: 1;
+    padding: var(--space-3) var(--space-4);
+    background: linear-gradient(135deg, #2196F3, #1976D2);
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-weight: var(--font-medium);
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.add-to-cart-btn:hover {
+    background: linear-gradient(135deg, #1976D2, #1565C0);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .beverages-header {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    
+    .filters-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .beverages-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="beverages-hero">
+    <div class="container">
+        <div class="beverages-header">
+            <div>
+                <h1 class="beverages-title">🥤 المشروبات المنعشة</h1>
+                <p>اكتشف مجموعتنا المتنوعة من المشروبات الطازجة والمنعشة</p>
+            </div>
+            
+            <div class="beverages-visual">
+                <div class="beverages-icon-large">
+                    <img src="https://images.unsplash.com/photo-1613478223719-2ab802602423?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="عصير">
+                </div>
+                <div class="beverages-icon-large">
+                    <img src="https://images.unsplash.com/photo-1544145945-f90425340c7e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="قهوة">
+                </div>
+                <div class="beverages-icon-large">
+                    <img src="https://images.unsplash.com/photo-1523362628745-0c100150b504?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="شاي">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<section class="beverages-content">
+    <div class="container">
+        <!-- Filters -->
+        <div class="beverages-filters">
+            <form method="GET" class="filters-form">
+                <div class="filters-row">
+                    <div>
+                        <input type="text" name="search" placeholder="ابحث عن المشروبات..." 
+                               value="{{ request.args.get('search', '') }}" class="filter-input-beverages">
+                    </div>
+                    <div>
+                        <select name="price_range" class="filter-select-beverages">
+                            <option value="">جميع الأسعار</option>
+                            <option value="0-5" {% if request.args.get('price_range') == '0-5' %}selected{% endif %}>0 - $5</option>
+                            <option value="5-15" {% if request.args.get('price_range') == '5-15' %}selected{% endif %}>$5 - $15</option>
+                            <option value="15+" {% if request.args.get('price_range') == '15+' %}selected{% endif %}>$15+</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select name="beverage_type" class="filter-select-beverages">
+                            <option value="">جميع الأنواع</option>
+                            <option value="juice" {% if request.args.get('beverage_type') == 'juice' %}selected{% endif %}>عصائر</option>
+                            <option value="coffee" {% if request.args.get('beverage_type') == 'coffee' %}selected{% endif %}>قهوة</option>
+                            <option value="tea" {% if request.args.get('beverage_type') == 'tea' %}selected{% endif %}>شاي</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select name="sort" class="filter-select-beverages">
+                            <option value="name">ترتيب حسب الاسم</option>
+                            <option value="price_low" {% if request.args.get('sort') == 'price_low' %}selected{% endif %}>السعر: منخفض إلى مرتفع</option>
+                            <option value="price_high" {% if request.args.get('sort') == 'price_high' %}selected{% endif %}>السعر: مرتفع إلى منخفض</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button type="submit" class="filter-btn">تطبيق</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Beverages Grid -->
+        {% if beverages %}
+        <div class="beverages-grid">
+            {% for beverage in beverages %}
+            <div class="beverage-card">
+                <div class="beverage-image">
+                    {% if 'عصير برتقال' in beverage.name %}
+                    <img src="{{ url_for('static', filename='img/products/beverages/عصير برتقال.jpg') }}" alt="{{ beverage.name }}">
+                    {% elif 'حبوب قهوة' in beverage.name or 'قهوة' in beverage.name %}
+                    <img src="{{ url_for('static', filename='img/products/beverages/حبوب قهوة.jpg') }}" alt="{{ beverage.name }}">
+                    {% elif 'شاي أخضر' in beverage.name or 'شاي' in beverage.name %}
+                    <img src="{{ url_for('static', filename='img/products/beverages/شاي أخضر.webp') }}" alt="{{ beverage.name }}">
+                    {% else %}
+                    <span style="font-size: 4rem;">🥤</span>
+                    {% endif %}
+                    
+                    <div class="beverage-badges">
+                        {% if beverage.featured %}
+                        <span class="beverage-badge badge-fresh">طازج</span>
+                        {% endif %}
+                        {% if 'كافيين' in beverage.nutritional_info %}
+                        <span class="beverage-badge badge-energy">طاقة</span>
+                        {% endif %}
+                        {% if beverage.discount > 0 %}
+                        <span class="beverage-badge badge-sale">خصم {{ beverage.discount }}%</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="beverage-info">
+                    <div class="beverage-header">
+                        <h3 class="beverage-name">{{ beverage.name }}</h3>
+                        <div class="beverage-price">
+                            {% if beverage.discount > 0 %}
+                            ${{ "%.2f"|format(beverage.price * (1 - beverage.discount / 100)) }}
+                            {% else %}
+                            ${{ "%.2f"|format(beverage.price) }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <p>{{ beverage.brand }}</p>
+                    <p>{{ beverage.description }}</p>
+                    
+                    <div class="beverage-nutrients">
+                        {% for nutrient in beverage.nutrients %}
+                        <span class="nutrient-tag">{{ nutrient }}</span>
+                        {% endfor %}
+                    </div>
+                    
+                    <form action="{{ url_for('add_to_cart') }}" method="POST" class="beverage-actions">
+                        <input type="hidden" name="product_id" value="{{ beverage.id }}">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="add-to-cart-btn">أضف للعربة 🛒</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-results">
+            <h3>لا توجد مشروبات متوفرة</h3>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

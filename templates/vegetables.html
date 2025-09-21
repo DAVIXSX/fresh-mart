@@ -1,0 +1,771 @@
+{% extends "base.html" %}
+
+{% block title %}الخضروات الطازجة - فريش مارت{% endblock %}
+
+{% block content %}
+<!-- Vegetables Hero Section -->
+<section class="vegetables-hero">
+    <div class="container">
+        <div class="vegetables-header">
+            <div class="vegetables-text">
+                <h1 class="vegetables-title">🥕 الخضروات الطازجة</h1>
+                <p class="vegetables-subtitle">اكتشف مجموعتنا المتنوعة من الخضروات الطازجة عالية الجودة، مقطوفة حديثاً من أفضل المزارع لتصل إلى مائدتك بأقصى درجات الطزاجة والمذاق الطبيعي.</p>
+                
+                <div class="vegetables-stats">
+                    <div class="stat-card">
+                        <span class="stat-number">{{ vegetables_count }}</span>
+                        <span class="stat-label">نوع من الخضروات</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">طازجة ومضمونة</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">متوفرة دائماً</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="vegetables-visual">
+                <div class="vegetable-icon">🥕</div>
+                <div class="vegetable-icon">🥬</div>
+                <div class="vegetable-icon">🍅</div>
+                <div class="vegetable-icon">🥒</div>
+                <div class="vegetable-icon">🧅</div>
+                <div class="vegetable-icon">🥦</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Vegetables Content -->
+<section class="vegetables-content">
+    <div class="container">
+        <div class="section-header-vegetables">
+            <h2 class="section-title-vegetables">تشكيلة متنوعة من الخضروات</h2>
+            <p class="section-subtitle-vegetables">خضروات طازجة ومغذية مختارة بعناية لتلبي احتياجاتك اليومية من الفيتامينات والمعادن الأساسية</p>
+        </div>
+
+        <!-- Enhanced Modern Filters -->
+        <div class="vegetables-filters">
+            <div class="filters-header">
+                <span class="filters-title">🔍 فلتر وبحث متقدم</span>
+            </div>
+            <form method="GET" class="filters-form">
+                <div class="filters-row">
+                    <div class="filter-group-vegetables">
+                        <label class="filter-label-vegetables">🔍 ابحث في الخضروات</label>
+                        <input type="text" name="search" placeholder="ابحث عن الجزر، الطماطم، السبانخ..." 
+                               class="filter-input-vegetables" value="{{ request.args.get('search', '') }}">
+                    </div>
+                    
+                    <div class="filter-group-vegetables">
+                        <label class="filter-label-vegetables">💰 نطاق السعر</label>
+                        <select name="price_range" class="filter-select-vegetables">
+                            <option value="">جميع الأسعار</option>
+                            <option value="0-5" {% if request.args.get('price_range') == '0-5' %}selected{% endif %}>$0 - $5</option>
+                            <option value="5-10" {% if request.args.get('price_range') == '5-10' %}selected{% endif %}>$5 - $10</option>
+                            <option value="10+" {% if request.args.get('price_range') == '10+' %}selected{% endif %}>$10+</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group-vegetables">
+                        <label class="filter-label-vegetables">🌿 النوع</label>
+                        <select name="vegetable_type" class="filter-select-vegetables">
+                            <option value="">جميع الأنواع</option>
+                            <option value="leafy" {% if request.args.get('vegetable_type') == 'leafy' %}selected{% endif %}>خضروات ورقية</option>
+                            <option value="root" {% if request.args.get('vegetable_type') == 'root' %}selected{% endif %}>خضروات جذرية</option>
+                            <option value="fruit" {% if request.args.get('vegetable_type') == 'fruit' %}selected{% endif %}>خضروات ثمرية</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group-vegetables">
+                        <label class="filter-label-vegetables">🏷️ الترتيب</label>
+                        <select name="sort" class="filter-select-vegetables">
+                            <option value="name" {% if request.args.get('sort') == 'name' %}selected{% endif %}>الاسم أ-ي</option>
+                            <option value="price_low" {% if request.args.get('sort') == 'price_low' %}selected{% endif %}>السعر: منخفض إلى مرتفع</option>
+                            <option value="price_high" {% if request.args.get('sort') == 'price_high' %}selected{% endif %}>السعر: مرتفع إلى منخفض</option>
+                            <option value="popularity" {% if request.args.get('sort') == 'popularity' %}selected{% endif %}>الأكثر شعبية</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="filter-button">
+                        <span>🔍</span>
+                        <span>تطبيق</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Vegetables Grid -->
+        <div class="vegetables-grid">
+            {% for vegetable in vegetables %}
+            <div class="vegetable-card">
+                <div class="vegetable-badges">
+                    <div class="vegetable-badge badge-fresh">طازج</div>
+                    {% if vegetable.get('organic', False) %}
+                    <div class="vegetable-badge badge-organic">عضوي</div>
+                    {% endif %}
+                    {% if vegetable.discount > 0 %}
+                    <div class="vegetable-badge badge-sale">خصم {{ vegetable.discount }}%</div>
+                    {% endif %}
+                </div>
+                
+                <div class="vegetable-image">
+                    {% if 'جزر طازج' in vegetable.name %}
+                        <img src="{{ url_for('static', filename='img/products/vegetables/جزر طازج.jpg') }}" alt="{{ vegetable.name }}" class="vegetable-img">
+                    {% elif 'طماطم كرزية' in vegetable.name %}
+                        <img src="{{ url_for('static', filename='img/products/vegetables/طماطم كرزية.jpg') }}" alt="{{ vegetable.name }}" class="vegetable-img">
+                    {% elif 'فلفل رومي' in vegetable.name %}
+                        <img src="{{ url_for('static', filename='img/products/vegetables/فلفل رومي.jpg') }}" alt="{{ vegetable.name }}" class="vegetable-img">
+                    {% elif 'أوراق السبانخ' in vegetable.name %}
+                        <img src="{{ url_for('static', filename='img/products/vegetables/أوراق السبانخ.webp') }}" alt="{{ vegetable.name }}" class="vegetable-img">
+                    {% elif 'بروكلي' in vegetable.name %}
+                        <img src="{{ url_for('static', filename='img/products/vegetables/بروكلي.webp') }}" alt="{{ vegetable.name }}" class="vegetable-img">
+                    {% else %}
+                        <div class="vegetable-placeholder">{{ vegetable.get('emoji', '🥬') }}</div>
+                    {% endif %}
+                    <div class="vegetable-overlay">
+                        <a href="{{ url_for('product_detail', product_id=vegetable.id) }}" class="quick-view-btn-vegetables">
+                            ✨ عرض سريع
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="vegetable-info">
+                    <h3 class="vegetable-name">
+                        <a href="{{ url_for('product_detail', product_id=vegetable.id) }}">{{ vegetable.name }}</a>
+                    </h3>
+                    <p class="vegetable-brand">{{ vegetable.brand }}</p>
+                    <p class="vegetable-description">{{ vegetable.description[:80] }}{% if vegetable.description|length > 80 %}...{% endif %}</p>
+                    
+                    {% if vegetable.get('nutrients') %}
+                    <div class="vegetable-nutrients">
+                        {% for nutrient in vegetable.nutrients %}
+                        <span class="nutrient-tag">{{ nutrient }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="vegetable-price">
+                        {% if vegetable.discount > 0 %}
+                        <span class="price-original-vegetables">${{ "%.2f"|format(vegetable.price) }}</span>
+                        <span class="price-current-vegetables">${{ "%.2f"|format(vegetable.price * (1 - vegetable.discount / 100)) }}</span>
+                        {% else %}
+                        <span class="price-current-vegetables">${{ "%.2f"|format(vegetable.price) }}</span>
+                        {% endif %}
+                        <span class="price-unit">/ كيلو</span>
+                    </div>
+                    
+                    <form action="{{ url_for('add_to_cart') }}" method="POST" class="add-to-cart-form">
+                        <input type="hidden" name="product_id" value="{{ vegetable.id }}">
+                        <div class="vegetable-actions">
+                            <div class="quantity-selector-vegetables">
+                                <button type="button" class="qty-btn-vegetables minus">-</button>
+                                <input type="number" name="quantity" value="1" min="1" max="{{ vegetable.stock }}" class="qty-input-vegetables">
+                                <button type="button" class="qty-btn-vegetables plus">+</button>
+                            </div>
+                            <button type="submit" class="add-to-cart-btn-vegetables" {% if vegetable.stock == 0 %}disabled{% endif %}>
+                                {% if vegetable.stock == 0 %}
+                                    نفد المخزون
+                                {% else %}
+                                    <span>🛒</span>
+                                    <span>أضف للعربة</span>
+                                {% endif %}
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div class="vegetable-stock {% if vegetable.stock > 20 %}stock-high{% elif vegetable.stock > 5 %}stock-medium{% else %}stock-low{% endif %}">
+                        <div class="stock-dot"></div>
+                        <span>
+                            {% if vegetable.stock > 20 %}
+                                متوفر بكثرة
+                            {% elif vegetable.stock > 5 %}
+                                متوفر ({{ vegetable.stock }} قطعة)
+                            {% elif vegetable.stock > 0 %}
+                                كمية محدودة ({{ vegetable.stock }} قطعة)
+                            {% else %}
+                                نفد المخزون
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Vegetables Benefits Section -->
+<section class="vegetables-benefits">
+    <div class="container">
+        <div class="section-header-vegetables">
+            <h2 class="section-title-vegetables">فوائد الخضروات الطازجة</h2>
+            <p class="section-subtitle-vegetables">اكتشف الفوائد الصحية المذهلة للخضروات الطازجة وكيف تساهم في تحسين صحتك ونمط حياتك</p>
+        </div>
+        
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <span class="benefit-icon">💪</span>
+                <h3 class="benefit-title">تقوية المناعة</h3>
+                <p class="benefit-description">غنية بالفيتامينات والمعادن الأساسية التي تعزز جهاز المناعة وتحمي من الأمراض</p>
+            </div>
+            
+            <div class="benefit-card">
+                <span class="benefit-icon">❤️</span>
+                <h3 class="benefit-title">صحة القلب</h3>
+                <p class="benefit-description">تحتوي على الألياف ومضادات الأكسدة التي تحافظ على صحة القلب والأوعية الدموية</p>
+            </div>
+            
+            <div class="benefit-card">
+                <span class="benefit-icon">⚡</span>
+                <h3 class="benefit-title">طاقة طبيعية</h3>
+                <p class="benefit-description">توفر الطاقة الطبيعية اللازمة للجسم بدون سعرات حرارية زائدة</p>
+            </div>
+            
+            <div class="benefit-card">
+                <span class="benefit-icon">🧠</span>
+                <h3 class="benefit-title">تحسين الذاكرة</h3>
+                <p class="benefit-description">تحتوي على مركبات تحسن وظائف الدماغ والذاكرة والتركيز</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.vegetables-hero {
+    background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 50%, #81C784 100%);
+    padding: 60px 0;
+    color: white;
+}
+
+.vegetables-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+}
+
+.vegetables-title {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.vegetables-subtitle {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.vegetables-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+}
+
+.stat-number {
+    display: block;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.vegetables-visual {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.vegetable-icon {
+    font-size: 4rem;
+    text-align: center;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.vegetables-content {
+    padding: 60px 0;
+    background: #f8f9fa;
+}
+
+.section-header-vegetables {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.section-title-vegetables {
+    font-size: 2.5rem;
+    color: #2E7D32;
+    margin-bottom: 15px;
+}
+
+.section-subtitle-vegetables {
+    font-size: 1.1rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.vegetables-filters {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.filters-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #2E7D32;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.filters-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr auto;
+    gap: 20px;
+    align-items: end;
+}
+
+.filter-label-vegetables {
+    display: block;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.filter-input-vegetables,
+.filter-select-vegetables {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: border-color 0.3s;
+}
+
+.filter-input-vegetables:focus,
+.filter-select-vegetables:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
+.filter-button {
+    background: linear-gradient(135deg, #4CAF50, #66BB6A);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.2s;
+}
+
+.filter-button:hover {
+    transform: translateY(-2px);
+}
+
+.vegetables-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
+}
+
+.vegetable-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.vegetable-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+.vegetable-badges {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 2;
+}
+
+.vegetable-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: white;
+}
+
+.badge-fresh {
+    background: linear-gradient(135deg, #4CAF50, #66BB6A);
+}
+
+.badge-organic {
+    background: linear-gradient(135deg, #FF9800, #FFB74D);
+}
+
+.badge-sale {
+    background: linear-gradient(135deg, #F44336, #EF5350);
+}
+
+.vegetable-image {
+    height: 200px;
+    background: linear-gradient(135deg, #f8fff8, #e8f5e8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.vegetable-placeholder {
+    font-size: 5rem;
+    transition: transform 0.3s;
+}
+
+.vegetable-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.vegetable-card:hover .vegetable-img {
+    transform: scale(1.05);
+}
+
+.vegetable-card:hover .vegetable-placeholder {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.vegetable-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(76, 175, 80, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.vegetable-card:hover .vegetable-overlay {
+    opacity: 1;
+}
+
+.quick-view-btn-vegetables {
+    background: white;
+    color: #4CAF50;
+    padding: 12px 24px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transform: translateY(20px);
+    transition: transform 0.3s;
+}
+
+.vegetable-card:hover .quick-view-btn-vegetables {
+    transform: translateY(0);
+}
+
+.vegetable-info {
+    padding: 25px;
+}
+
+.vegetable-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.vegetable-name a {
+    text-decoration: none;
+    color: #333;
+    transition: color 0.3s;
+}
+
+.vegetable-name a:hover {
+    color: #4CAF50;
+}
+
+.vegetable-brand {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+}
+
+.vegetable-description {
+    color: #777;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.vegetable-nutrients {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.nutrient-tag {
+    background: #E8F5E8;
+    color: #4CAF50;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.vegetable-price {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.price-current-vegetables {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #4CAF50;
+}
+
+.price-original-vegetables {
+    color: #999;
+    text-decoration: line-through;
+}
+
+.price-unit {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.vegetable-actions {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.quantity-selector-vegetables {
+    display: flex;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.qty-btn-vegetables {
+    background: #f5f5f5;
+    border: none;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.qty-btn-vegetables:hover {
+    background: #4CAF50;
+    color: white;
+}
+
+.qty-input-vegetables {
+    border: none;
+    text-align: center;
+    width: 60px;
+    height: 40px;
+    font-weight: 600;
+}
+
+.add-to-cart-btn-vegetables {
+    background: linear-gradient(135deg, #4CAF50, #66BB6A);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: transform 0.2s;
+}
+
+.add-to-cart-btn-vegetables:hover {
+    transform: translateY(-2px);
+}
+
+.add-to-cart-btn-vegetables:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.vegetable-stock {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+
+.stock-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.stock-high .stock-dot {
+    background: #4CAF50;
+}
+
+.stock-medium .stock-dot {
+    background: #FF9800;
+}
+
+.stock-low .stock-dot {
+    background: #F44336;
+}
+
+.vegetables-benefits {
+    background: linear-gradient(135deg, #E8F5E8, #F1F8E9);
+    padding: 60px 0;
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.benefit-card {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+
+.benefit-card:hover {
+    transform: translateY(-5px);
+}
+
+.benefit-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.benefit-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #2E7D32;
+    margin-bottom: 15px;
+}
+
+.benefit-description {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .vegetables-header {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    
+    .vegetables-title {
+        font-size: 2rem;
+    }
+    
+    .vegetables-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .vegetables-visual {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .filters-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .vegetables-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .benefits-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Quantity selectors
+    const quantitySelectors = document.querySelectorAll('.quantity-selector-vegetables');
+    
+    quantitySelectors.forEach(selector => {
+        const minusBtn = selector.querySelector('.minus');
+        const plusBtn = selector.querySelector('.plus');
+        const input = selector.querySelector('.qty-input-vegetables');
+        
+        minusBtn.addEventListener('click', () => {
+            const currentValue = parseInt(input.value);
+            if (currentValue > 1) {
+                input.value = currentValue - 1;
+            }
+        });
+        
+        plusBtn.addEventListener('click', () => {
+            const currentValue = parseInt(input.value);
+            const maxValue = parseInt(input.getAttribute('max'));
+            if (currentValue < maxValue) {
+                input.value = currentValue + 1;
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

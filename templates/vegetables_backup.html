@@ -1,0 +1,1095 @@
+{% extends "base.html" %}
+
+{% block title %}الخضروات الطازجة - فريش مارت{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Modern Vegetables Page with Real Images */
+.vegetables-hero {
+    background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 50%, #81C784 100%);
+    padding: var(--space-20) 0;
+    position: relative;
+    overflow: hidden;
+    color: white;
+}
+
+.vegetables-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('https://images.unsplash.com/photo-1540420773420-3366772f4999?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80') center/cover;
+    opacity: 0.15;
+    z-index: 1;
+}
+
+.vegetables-hero::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    animation: heroFloat 20s linear infinite;
+    z-index: 2;
+}
+
+@keyframes heroFloat {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.1); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
+.vegetables-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: var(--space-16);
+    position: relative;
+    z-index: 3;
+}
+
+.vegetables-title {
+    font-size: var(--text-6xl);
+    font-weight: var(--font-bold);
+    margin-bottom: var(--space-6);
+    line-height: 1.1;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.vegetables-subtitle {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-8);
+    line-height: 1.6;
+    opacity: 0.95;
+}
+
+.vegetables-features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+    margin-top: var(--space-8);
+}
+
+.feature-item {
+    background: rgba(255, 255, 255, 0.2);
+    padding: var(--space-4);
+    border-radius: var(--radius-xl);
+    text-align: center;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all var(--transition-base);
+}
+
+.feature-item:hover {
+    transform: translateY(-4px);
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.vegetables-visual {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+}
+
+.vegetable-icon-large {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: all var(--transition-base);
+    animation: floatIcon 4s ease-in-out infinite;
+}
+
+.vegetable-icon-large img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+@keyframes floatIcon {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.vegetables-content {
+    padding: var(--space-16) 0;
+    background: linear-gradient(135deg, #F1F8E9 0%, #E8F5E8 50%, #F1F8E9 100%);
+}
+
+.vegetables-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: var(--space-10);
+}
+
+.vegetable-card {
+    background: white;
+    border-radius: var(--radius-3xl);
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    transition: all var(--transition-slow);
+    position: relative;
+    border: 1px solid var(--neutral-100);
+}
+
+.vegetable-card:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+
+.vegetable-image {
+    position: relative;
+    height: 280px;
+    background: linear-gradient(135deg, #F1F8E9, #E8F5E8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.vegetable-real-image {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: var(--radius-2xl);
+    transition: all var(--transition-base);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+.vegetable-card:hover .vegetable-real-image {
+    transform: scale(1.1) rotate(3deg);
+}
+
+.vegetable-badges {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    z-index: 3;
+}
+
+.vegetable-badge {
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: var(--font-bold);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.badge-fresh {
+    background: linear-gradient(135deg, #4CAF50, #66BB6A);
+}
+
+.badge-organic {
+    background: linear-gradient(135deg, #FF9800, #FFB74D);
+}
+
+.badge-sale {
+    background: linear-gradient(135deg, #F44336, #EF5350);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .vegetables-header {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: var(--space-10);
+    }
+    
+    .vegetables-title {
+        font-size: var(--text-4xl);
+    }
+    
+    .vegetables-features {
+        grid-template-columns: 1fr;
+    }
+    
+    .vegetables-visual {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .vegetables-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-8);
+    }
+}
+</style>
+{% endblock %}
+
+.section-header-vegetables {
+    text-align: center;
+    margin-bottom: var(--space-12);
+    position: relative;
+}
+
+.section-title-vegetables {
+    font-size: var(--text-4xl);
+    font-weight: var(--font-bold);
+    color: var(--primary-800);
+    margin-bottom: var(--space-4);
+    position: relative;
+}
+
+.section-title-vegetables::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-500), var(--secondary-500));
+    border-radius: var(--radius-full);
+}
+
+.section-subtitle-vegetables {
+    font-size: var(--text-lg);
+    color: var(--neutral-600);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.vegetables-filters {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-2xl);
+    padding: var(--space-6);
+    margin-bottom: var(--space-10);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(76, 175, 80, 0.1);
+}
+
+.filters-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr auto;
+    gap: var(--space-4);
+    align-items: end;
+}
+
+.filter-group-vegetables {
+    position: relative;
+}
+
+.filter-label-vegetables {
+    display: block;
+    font-weight: var(--font-semibold);
+    color: var(--neutral-700);
+    margin-bottom: var(--space-2);
+    font-size: var(--text-sm);
+}
+
+.filter-input-vegetables,
+.filter-select-vegetables {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    border: 2px solid var(--neutral-200);
+    border-radius: var(--radius-lg);
+    font-family: inherit;
+    font-size: var(--text-sm);
+    transition: all var(--transition-base);
+    background: white;
+}
+
+.filter-input-vegetables:focus,
+.filter-select-vegetables:focus {
+    outline: none;
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+    transform: translateY(-1px);
+}
+
+.filter-button {
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    padding: var(--space-3) var(--space-6);
+    font-weight: var(--font-semibold);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.filter-button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+}
+
+.vegetables-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--space-8);
+}
+
+.vegetable-card {
+    background: white;
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+    position: relative;
+    border: 1px solid var(--neutral-200);
+    transform-origin: center;
+}
+
+.vegetable-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-500), #4CAF50, #8BC34A);
+    transform: scaleX(0);
+    transition: transform var(--transition-base);
+    z-index: 1;
+}
+
+.vegetable-card:hover {
+    transform: translateY(-10px) scale(1.03);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-200);
+}
+
+.vegetable-card:hover::before {
+    transform: scaleX(1);
+}
+
+.vegetable-image {
+    position: relative;
+    height: 250px;
+    background: linear-gradient(135deg, #f8fff8, #e8f5e8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: transform var(--transition-slow);
+}
+
+.vegetable-card:hover .vegetable-image {
+    transform: scale(1.05);
+}
+
+.vegetable-placeholder {
+    font-size: 6rem;
+    color: var(--primary-400);
+    transition: all var(--transition-base);
+    text-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
+}
+
+.vegetable-card:hover .vegetable-placeholder {
+    transform: scale(1.1) rotate(5deg);
+    text-shadow: 0 8px 16px rgba(76, 175, 80, 0.3);
+}
+
+.vegetable-badges {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    z-index: 2;
+}
+
+.vegetable-badge {
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: var(--font-bold);
+    color: white;
+    box-shadow: var(--shadow-md);
+    animation: badgePulse 2s infinite;
+}
+
+.badge-fresh {
+    background: linear-gradient(135deg, #4CAF50, #8BC34A);
+}
+
+.badge-organic {
+    background: linear-gradient(135deg, #FF9800, #FFC107);
+}
+
+.badge-sale {
+    background: linear-gradient(135deg, #F44336, #FF5722);
+}
+
+@keyframes badgePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.vegetable-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(76, 175, 80, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+.vegetable-card:hover .vegetable-overlay {
+    opacity: 1;
+}
+
+.quick-view-btn-vegetables {
+    background: white;
+    color: var(--primary-600);
+    padding: var(--space-4) var(--space-8);
+    border-radius: var(--radius-full);
+    text-decoration: none;
+    font-weight: var(--font-semibold);
+    font-size: var(--text-sm);
+    transform: translateY(20px);
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-lg);
+    border: 2px solid white;
+}
+
+.vegetable-card:hover .quick-view-btn-vegetables {
+    transform: translateY(0);
+}
+
+.quick-view-btn-vegetables:hover {
+    background: var(--primary-600);
+    color: white;
+    transform: scale(1.05);
+}
+
+.vegetable-info {
+    padding: var(--space-6);
+}
+
+.vegetable-name {
+    font-size: var(--text-xl);
+    font-weight: var(--font-bold);
+    color: var(--neutral-800);
+    margin-bottom: var(--space-2);
+    line-height: 1.3;
+}
+
+.vegetable-name a {
+    text-decoration: none;
+    color: inherit;
+    transition: color var(--transition-base);
+}
+
+.vegetable-name a:hover {
+    color: var(--primary-600);
+}
+
+.vegetable-brand {
+    color: var(--neutral-500);
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-3);
+    font-weight: var(--font-medium);
+}
+
+.vegetable-description {
+    color: var(--neutral-600);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    margin-bottom: var(--space-4);
+}
+
+.vegetable-nutrients {
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.nutrient-tag {
+    background: var(--primary-50);
+    color: var(--primary-700);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-md);
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+    border: 1px solid var(--primary-200);
+}
+
+.vegetable-price {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    margin-bottom: var(--space-5);
+}
+
+.price-current-vegetables {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-bold);
+    color: var(--primary-600);
+}
+
+.price-original-vegetables {
+    font-size: var(--text-base);
+    color: var(--neutral-400);
+    text-decoration: line-through;
+}
+
+.price-unit {
+    font-size: var(--text-sm);
+    color: var(--neutral-500);
+}
+
+.vegetable-actions {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-3);
+    align-items: center;
+}
+
+.quantity-selector-vegetables {
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--neutral-200);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: white;
+}
+
+.qty-btn-vegetables {
+    background: var(--neutral-100);
+    border: none;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: var(--font-bold);
+    color: var(--neutral-600);
+    transition: all var(--transition-base);
+}
+
+.qty-btn-vegetables:hover {
+    background: var(--primary-100);
+    color: var(--primary-600);
+}
+
+.qty-input-vegetables {
+    border: none;
+    text-align: center;
+    width: 60px;
+    height: 40px;
+    font-weight: var(--font-semibold);
+    color: var(--neutral-700);
+    background: white;
+}
+
+.add-to-cart-btn-vegetables {
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    padding: var(--space-3) var(--space-6);
+    font-weight: var(--font-semibold);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+}
+
+.add-to-cart-btn-vegetables:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+}
+
+.vegetable-stock {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    font-size: var(--text-sm);
+}
+
+.stock-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.stock-high .stock-dot {
+    background: var(--primary-500);
+}
+
+.stock-medium .stock-dot {
+    background: var(--secondary-500);
+}
+
+.stock-low .stock-dot {
+    background: var(--accent-500);
+}
+
+.vegetables-benefits {
+    background: linear-gradient(135deg, var(--primary-50), var(--neutral-50));
+    padding: var(--space-16) 0;
+    margin-top: var(--space-16);
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-8);
+}
+
+.benefit-card {
+    background: white;
+    padding: var(--space-8);
+    border-radius: var(--radius-2xl);
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+    border: 1px solid var(--neutral-200);
+}
+
+.benefit-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-200);
+}
+
+.benefit-icon {
+    font-size: 4rem;
+    margin-bottom: var(--space-4);
+    display: block;
+}
+
+.benefit-title {
+    font-size: var(--text-xl);
+    font-weight: var(--font-bold);
+    color: var(--neutral-800);
+    margin-bottom: var(--space-3);
+}
+
+.benefit-description {
+    color: var(--neutral-600);
+    line-height: 1.6;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .vegetables-header {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: var(--space-8);
+    }
+    
+    .vegetables-title {
+        font-size: var(--text-3xl);
+    }
+    
+    .vegetables-stats {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+    }
+    
+    .filters-row {
+        grid-template-columns: 1fr;
+        gap: var(--space-3);
+    }
+    
+    .vegetables-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-6);
+    }
+    
+    .vegetable-card:hover {
+        transform: translateY(-4px);
+    }
+    
+    .benefits-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-6);
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Vegetables Hero Section -->
+<section class="vegetables-hero">
+    <div class="container">
+        <div class="vegetables-header">
+            <div class="vegetables-text">
+                <h1 class="vegetables-title">🥕 الخضروات الطازجة</h1>
+                <p class="vegetables-subtitle">اكتشف مجموعتنا المتنوعة من الخضروات الطازجة عالية الجودة، مقطوفة حديثاً من أفضل المزارع لتصل إلى مائدتك بأقصى درجات الطزاجة والمذاق الطبيعي.</p>
+                
+                <div class="vegetables-stats">
+                    <div class="stat-card">
+                        <span class="stat-number">{{ vegetables_count }}</span>
+                        <span class="stat-label">نوع من الخضروات</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">طازجة ومضمونة</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">متوفرة دائماً</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="vegetables-visual">
+                <div class="vegetable-icon">🥕</div>
+                <div class="vegetable-icon">🥬</div>
+                <div class="vegetable-icon">🍅</div>
+                <div class="vegetable-icon">🥒</div>
+                <div class="vegetable-icon">🧅</div>
+                <div class="vegetable-icon">🥦</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Vegetables Content -->
+<section class="vegetables-content">
+    <div class="container">
+        <div class="section-header-vegetables">
+            <h2 class="section-title-vegetables">تشكيلة متنوعة من الخضروات</h2>
+            <p class="section-subtitle-vegetables">خضروات طازجة ومغذية مختارة بعناية لتلبي احتياجاتك اليومية من الفيتامينات والمعادن الأساسية</p>
+        </div>
+
+        <!-- Enhanced Modern Filters -->
+        <div class="vegetables-filters">
+            <div class="filters-header">
+                <span class="filters-title">🔍 فلتر وبحث متقدم</span>
+            </div>
+            <form method="GET" class="filters-form">
+                <div class="filters-row">
+                    <div class="filter-group-vegetables">
+                        <label class="filter-label-vegetables">🔍 ابحث في الخضروات</label>
+                        <input type="text" name="search" placeholder="ابحث عن الجزر، الطماطم، السبانخ..." 
+                               class="filter-input-vegetables" value="{{ request.args.get('search', '') }}">
+                    </div>
+                    
+                    <div class="filter-group-vegetables">
+                        <label class="filter-label-vegetables">💰 نطاق السعر</label>
+                        <select name="price_range" class="filter-select-vegetables">
+                            <option value="">جميع الأسعار</option>
+                            <option value="0-5" {% if request.args.get('price_range') == '0-5' %}selected{% endif %}>$0 - $5</option>
+                            <option value="5-10" {% if request.args.get('price_range') == '5-10' %}selected{% endif %}>$5 - $10</option>
+                            <option value="10+" {% if request.args.get('price_range') == '10+' %}selected{% endif %}>$10+</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group-vegetables">
+                        <label class="filter-label-vegetables">🌿 النوع</label>
+                        <select name="vegetable_type" class="filter-select-vegetables">
+                            <option value="">جميع الأنواع</option>
+                            <option value="leafy" {% if request.args.get('vegetable_type') == 'leafy' %}selected{% endif %}>خضروات ورقية</option>
+                            <option value="root" {% if request.args.get('vegetable_type') == 'root' %}selected{% endif %}>خضروات جذرية</option>
+                            <option value="fruit" {% if request.args.get('vegetable_type') == 'fruit' %}selected{% endif %}>خضروات ثمرية</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group-vegetables">
+                        <label class="filter-label-vegetables">🏷️ الترتيب</label>
+                        <select name="sort" class="filter-select-vegetables">
+                            <option value="name" {% if request.args.get('sort') == 'name' %}selected{% endif %}>الاسم أ-ي</option>
+                            <option value="price_low" {% if request.args.get('sort') == 'price_low' %}selected{% endif %}>السعر: منخفض إلى مرتفع</option>
+                            <option value="price_high" {% if request.args.get('sort') == 'price_high' %}selected{% endif %}>السعر: مرتفع إلى منخفض</option>
+                            <option value="popularity" {% if request.args.get('sort') == 'popularity' %}selected{% endif %}>الأكثر شعبية</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="filter-button">
+                        <span>🔍</span>
+                        <span>تطبيق</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Vegetables Grid -->
+        <div class="vegetables-grid">
+            {% for vegetable in vegetables %}
+            <div class="vegetable-card">
+                <div class="vegetable-badges">
+                    <div class="vegetable-badge badge-fresh">طازج</div>
+                    {% if vegetable.get('organic', False) %}
+                    <div class="vegetable-badge badge-organic">عضوي</div>
+                    {% endif %}
+                    {% if vegetable.discount > 0 %}
+                    <div class="vegetable-badge badge-sale">خصم {{ vegetable.discount }}%</div>
+                    {% endif %}
+                </div>
+                
+                <div class="vegetable-image">
+                    {% if vegetable.name == 'جزر طازج' %}
+                    <img src="https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="{{ vegetable.name }}" class="vegetable-real-image">
+                    {% elif 'فلفل' in vegetable.name %}
+                    <img src="https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="{{ vegetable.name }}" class="vegetable-real-image">
+                    {% elif 'سبانخ' in vegetable.name %}
+                    <img src="https://images.unsplash.com/photo-1576045057995-568f588f82fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="{{ vegetable.name }}" class="vegetable-real-image">
+                    {% elif 'طماطم' in vegetable.name %}
+                    <img src="https://images.unsplash.com/photo-1592841200221-a6898f307baa?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="{{ vegetable.name }}" class="vegetable-real-image">
+                    {% elif 'بروكلي' in vegetable.name %}
+                    <img src="https://images.unsplash.com/photo-1574316071802-0d684efa7bf5?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="{{ vegetable.name }}" class="vegetable-real-image">
+                    {% else %}
+                    <img src="https://images.unsplash.com/photo-1566281462850-8e91b6bf4e79?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="{{ vegetable.name }}" class="vegetable-real-image">
+                    {% endif %}
+                    <div class="vegetable-overlay">
+                        <a href="{{ url_for('product_detail', product_id=vegetable.id) }}" class="quick-view-btn-vegetables">
+                            ✨ عرض سريع
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="vegetable-info">
+                    <h3 class="vegetable-name">
+                        <a href="{{ url_for('product_detail', product_id=vegetable.id) }}">{{ vegetable.name }}</a>
+                    </h3>
+                    <p class="vegetable-brand">
+                        {% if vegetable.brand == 'وادي الأخضر' %}
+                        <img src="https://images.unsplash.com/photo-1497486751825-1233686d5d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="brand" class="brand-logo">
+                        {% elif vegetable.brand == 'مزرعة طازجة' %}
+                        <img src="https://images.unsplash.com/photo-1516253593875-bd7ba052fbc2?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="brand" class="brand-logo">
+                        {% elif vegetable.brand == 'حديقة طازجة' %}
+                        <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="brand" class="brand-logo">
+                        {% else %}
+                        <img src="https://images.unsplash.com/photo-1445205170230-053b83016050?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="brand" class="brand-logo">
+                        {% endif %}
+                        {{ vegetable.brand }}
+                    </p>
+                    <p class="vegetable-description">{{ vegetable.description[:80] }}{% if vegetable.description|length > 80 %}...{% endif %}</p>
+                    
+                    {% if vegetable.get('nutrients') %}
+                    <div class="vegetable-nutrients">
+                        {% for nutrient in vegetable.nutrients %}
+                        <span class="nutrient-tag">{{ nutrient }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="vegetable-price">
+                        {% if vegetable.discount > 0 %}
+                        <span class="price-original-vegetables">${{ "%.2f"|format(vegetable.price) }}</span>
+                        <span class="price-current-vegetables">${{ "%.2f"|format(vegetable.price * (1 - vegetable.discount / 100)) }}</span>
+                        {% else %}
+                        <span class="price-current-vegetables">${{ "%.2f"|format(vegetable.price) }}</span>
+                        {% endif %}
+                        <span class="price-unit">/ كيلو</span>
+                    </div>
+                    
+                    <form action="{{ url_for('add_to_cart') }}" method="POST" class="add-to-cart-form">
+                        <input type="hidden" name="product_id" value="{{ vegetable.id }}">
+                        <div class="vegetable-actions">
+                            <div class="quantity-selector-vegetables">
+                                <button type="button" class="qty-btn-vegetables minus">-</button>
+                                <input type="number" name="quantity" value="1" min="1" max="{{ vegetable.stock }}" class="qty-input-vegetables">
+                                <button type="button" class="qty-btn-vegetables plus">+</button>
+                            </div>
+                            <button type="submit" class="add-to-cart-btn-vegetables" {% if vegetable.stock == 0 %}disabled{% endif %}>
+                                {% if vegetable.stock == 0 %}
+                                    نفد المخزون
+                                {% else %}
+                                    <span>🛒</span>
+                                    <span>أضف للعربة</span>
+                                {% endif %}
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div class="vegetable-stock {% if vegetable.stock > 20 %}stock-high{% elif vegetable.stock > 5 %}stock-medium{% else %}stock-low{% endif %}">
+                        <div class="stock-dot"></div>
+                        <span>
+                            {% if vegetable.stock > 20 %}
+                                متوفر بكثرة
+                            {% elif vegetable.stock > 5 %}
+                                متوفر ({{ vegetable.stock }} قطعة)
+                            {% elif vegetable.stock > 0 %}
+                                كمية محدودة ({{ vegetable.stock }} قطعة)
+                            {% else %}
+                                نفد المخزون
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Vegetables Benefits Section -->
+<section class="vegetables-benefits">
+    <div class="container">
+        <div class="section-header-vegetables">
+            <h2 class="section-title-vegetables">فوائد الخضروات الطازجة</h2>
+            <p class="section-subtitle-vegetables">اكتشف الفوائد الصحية المذهلة للخضروات الطازجة وكيف تساهم في تحسين صحتك ونمط حياتك</p>
+        </div>
+        
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <span class="benefit-icon">💪</span>
+                <h3 class="benefit-title">تقوية المناعة</h3>
+                <p class="benefit-description">غنية بالفيتامينات والمعادن الأساسية التي تعزز جهاز المناعة وتحمي من الأمراض</p>
+            </div>
+            
+            <div class="benefit-card">
+                <span class="benefit-icon">❤️</span>
+                <h3 class="benefit-title">صحة القلب</h3>
+                <p class="benefit-description">تحتوي على الألياف ومضادات الأكسدة التي تحافظ على صحة القلب والأوعية الدموية</p>
+            </div>
+            
+            <div class="benefit-card">
+                <span class="benefit-icon">⚡</span>
+                <h3 class="benefit-title">طاقة طبيعية</h3>
+                <p class="benefit-description">توفر الطاقة الطبيعية اللازمة للجسم بدون سعرات حرارية زائدة</p>
+            </div>
+            
+            <div class="benefit-card">
+                <span class="benefit-icon">🧠</span>
+                <h3 class="benefit-title">تحسين الذاكرة</h3>
+                <p class="benefit-description">تحتوي على مركبات تحسن وظائف الدماغ والذاكرة والتركيز</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+// Vegetables Page JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    // Quantity selectors
+    const quantitySelectors = document.querySelectorAll('.quantity-selector-vegetables');
+    
+    quantitySelectors.forEach(selector => {
+        const minusBtn = selector.querySelector('.minus');
+        const plusBtn = selector.querySelector('.plus');
+        const input = selector.querySelector('.qty-input-vegetables');
+        
+        minusBtn.addEventListener('click', () => {
+            const currentValue = parseInt(input.value);
+            if (currentValue > 1) {
+                input.value = currentValue - 1;
+            }
+        });
+        
+        plusBtn.addEventListener('click', () => {
+            const currentValue = parseInt(input.value);
+            const maxValue = parseInt(input.getAttribute('max'));
+            if (currentValue < maxValue) {
+                input.value = currentValue + 1;
+            }
+        });
+    });
+    
+    // Add to cart forms
+    const addToCartForms = document.querySelectorAll('.add-to-cart-form');
+    
+    addToCartForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const button = form.querySelector('.add-to-cart-btn-vegetables');
+            const originalText = button.innerHTML;
+            
+            // Show loading state
+            button.innerHTML = '<span>⏳</span><span>جاري الإضافة...</span>';
+            button.disabled = true;
+            
+            // Simulate add to cart
+            setTimeout(() => {
+                // Submit the form
+                const formData = new FormData(form);
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Show success state
+                        button.innerHTML = '<span>✅</span><span>تم الإضافة!</span>';
+                        
+                        // Reset after 2 seconds
+                        setTimeout(() => {
+                            button.innerHTML = originalText;
+                            button.disabled = false;
+                        }, 2000);
+                        
+                        // Update cart count if function exists
+                        if (typeof updateCartCount === 'function') {
+                            updateCartCount();
+                        }
+                    } else {
+                        throw new Error(data.message || 'فشل في إضافة المنتج');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    button.innerHTML = '<span>❌</span><span>خطأ! حاول مرة أخرى</span>';
+                    
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.disabled = false;
+                    }, 3000);
+                });
+            }, 500);
+        });
+    });
+    
+    // Filter form enhancement
+    const filterInputs = document.querySelectorAll('.filter-input-vegetables, .filter-select-vegetables');
+    
+    filterInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            // Auto-submit filter form on change (optional)
+            // this.closest('form').submit();
+        });
+    });
+    
+    // Scroll animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+    
+    // Observe vegetable cards
+    const vegetableCards = document.querySelectorAll('.vegetable-card');
+    vegetableCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+        observer.observe(card);
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,645 @@
+{% extends "base.html" %}
+
+{% block title %}المخبوزات الطازجة - فريش مارت{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Modern Bakery Page */
+.bakery-hero {
+    background: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 50%, #FFE082 100%);
+    padding: var(--space-20) 0;
+    position: relative;
+    overflow: hidden;
+    color: #E65100;
+}
+
+.bakery-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('https://images.unsplash.com/photo-1509440159596-0249088772ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80') center/cover;
+    opacity: 0.1;
+    z-index: 1;
+}
+
+.bakery-hero::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 193, 7, 0.2) 0%, transparent 70%);
+    animation: heroFloat 40s linear infinite;
+    z-index: 2;
+}
+
+@keyframes heroFloat {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.03); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
+.bakery-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: var(--space-16);
+    position: relative;
+    z-index: 3;
+}
+
+.bakery-title {
+    font-size: var(--text-6xl);
+    font-weight: var(--font-bold);
+    margin-bottom: var(--space-6);
+    text-shadow: 2px 2px 4px rgba(255,193,7,0.3);
+}
+
+.bakery-subtitle {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-8);
+    line-height: 1.6;
+    opacity: 0.9;
+}
+
+.bakery-features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+    margin-top: var(--space-8);
+}
+
+.feature-item {
+    background: rgba(255, 255, 255, 0.3);
+    padding: var(--space-4);
+    border-radius: var(--radius-xl);
+    text-align: center;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    transition: all var(--transition-base);
+    color: #E65100;
+}
+
+.feature-item:hover {
+    transform: translateY(-4px);
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.bakery-visual {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+}
+
+.bakery-icon-large {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 193, 7, 0.4);
+    transition: all var(--transition-base);
+    animation: floatIcon 7s ease-in-out infinite;
+}
+
+.bakery-icon-large img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+@keyframes floatIcon {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    25% { transform: translateY(-15px) rotate(2deg); }
+    50% { transform: translateY(-8px) rotate(-1deg); }
+    75% { transform: translateY(-18px) rotate(1deg); }
+}
+
+.bakery-content {
+    padding: var(--space-16) 0;
+    background: linear-gradient(135deg, #FFF9C4 0%, #F57F17 5%, #FFF9C4 100%);
+}
+
+.section-header-bakery {
+    text-align: center;
+    margin-bottom: var(--space-12);
+}
+
+.section-title-bakery {
+    font-size: var(--text-4xl);
+    font-weight: var(--font-bold);
+    color: #FF8F00;
+    margin-bottom: var(--space-4);
+    position: relative;
+}
+
+.section-title-bakery::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 4px;
+    background: linear-gradient(90deg, #FFF8E1, #FFECB3, #FFE082);
+    border-radius: var(--radius-full);
+}
+
+.bakery-filters {
+    background: white;
+    border-radius: var(--radius-2xl);
+    padding: var(--space-8);
+    margin-bottom: var(--space-12);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    border: 1px solid rgba(255, 152, 0, 0.1);
+}
+
+.filters-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--space-6);
+    gap: var(--space-3);
+}
+
+.filters-title {
+    font-size: var(--text-xl);
+    font-weight: var(--font-bold);
+    color: #FF8F00;
+}
+
+.filters-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr auto;
+    gap: var(--space-4);
+    align-items: end;
+}
+
+.filter-input-bakery,
+.filter-select-bakery {
+    width: 100%;
+    padding: var(--space-4);
+    border: 2px solid var(--neutral-200);
+    border-radius: var(--radius-lg);
+    font-family: inherit;
+    font-size: var(--text-sm);
+    transition: all var(--transition-base);
+    background: white;
+}
+
+.filter-input-bakery:focus,
+.filter-select-bakery:focus {
+    outline: none;
+    border-color: #FF9800;
+    box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.15);
+    transform: translateY(-1px);
+}
+
+.filter-button {
+    background: linear-gradient(135deg, #FF9800, #FFB74D);
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    padding: var(--space-4) var(--space-8);
+    font-weight: var(--font-semibold);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+}
+
+.filter-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 152, 0, 0.4);
+    background: linear-gradient(135deg, #F57C00, #FF9800);
+}
+
+.bakery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: var(--space-10);
+}
+
+.bakery-card {
+    background: white;
+    border-radius: var(--radius-3xl);
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    transition: all var(--transition-slow);
+    position: relative;
+    border: 1px solid var(--neutral-100);
+}
+
+.bakery-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #FFF8E1, #FFECB3, #FFE082);
+    transform: scaleX(0);
+    transition: transform var(--transition-base);
+    z-index: 2;
+}
+
+.bakery-card:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+}
+
+.bakery-card:hover::before {
+    transform: scaleX(1);
+}
+
+.bakery-image {
+    position: relative;
+    height: 280px;
+    background: linear-gradient(135deg, #FFF9C4, #FFECB3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.bakery-real-image {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: var(--radius-2xl);
+    transition: all var(--transition-base);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+.bakery-card:hover .bakery-real-image {
+    transform: scale(1.1) rotate(3deg);
+}
+
+.bakery-badges {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    z-index: 3;
+}
+
+.bakery-badge {
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: var(--font-bold);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.badge-fresh {
+    background: linear-gradient(135deg, #FF9800, #FFB74D);
+}
+
+.badge-artisan {
+    background: linear-gradient(135deg, #8BC34A, #AED581);
+}
+
+.badge-sale {
+    background: linear-gradient(135deg, #F44336, #EF5350);
+}
+
+.bakery-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 152, 0, 0.95), rgba(255, 183, 77, 0.95));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+.bakery-card:hover .bakery-overlay {
+    opacity: 1;
+}
+
+.quick-view-btn-bakery {
+    background: white;
+    color: #FF9800;
+    padding: var(--space-4) var(--space-8);
+    border-radius: var(--radius-full);
+    text-decoration: none;
+    font-weight: var(--font-bold);
+    transform: translateY(20px);
+    transition: all var(--transition-base);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+.bakery-card:hover .quick-view-btn-bakery {
+    transform: translateY(0);
+}
+
+.quick-view-btn-bakery:hover {
+    background: #FF9800;
+    color: white;
+    transform: scale(1.05);
+}
+
+.bakery-info {
+    padding: var(--space-8);
+}
+
+.bakery-name {
+    font-size: var(--text-xl);
+    font-weight: var(--font-bold);
+    color: var(--neutral-800);
+    margin-bottom: var(--space-3);
+}
+
+.bakery-brand {
+    color: var(--neutral-500);
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-4);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.brand-logo {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.bakery-nutrients {
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-5);
+    flex-wrap: wrap;
+}
+
+.nutrient-tag {
+    background: linear-gradient(135deg, #FFF9C4, #FFECB3);
+    color: #FF8F00;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+    border: 1px solid #FFE082;
+}
+
+.bakery-price {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+}
+
+.price-current-bakery {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-bold);
+    color: #FF9800;
+}
+
+.add-to-cart-btn-bakery {
+    background: linear-gradient(135deg, #FF9800, #FFB74D);
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    padding: var(--space-4) var(--space-6);
+    font-weight: var(--font-bold);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+}
+
+.add-to-cart-btn-bakery:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 152, 0, 0.4);
+    background: linear-gradient(135deg, #F57C00, #FF9800);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .bakery-header {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: var(--space-10);
+    }
+    
+    .bakery-visual {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .filters-row {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+    }
+    
+    .bakery-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-8);
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Bakery Hero Section -->
+<section class="bakery-hero">
+    <div class="container">
+        <div class="bakery-header">
+            <div class="bakery-content-text">
+                <h1 class="bakery-title">🍞 المخبوزات الطازجة</h1>
+                <p class="bakery-subtitle">اكتشف مجموعتنا من المخبوزات الطازجة المخبوزة يومياً، من الخبز التقليدي إلى المعجنات الفاخرة، نحضرها بأفضل المكونات الطبيعية</p>
+                
+                <div class="bakery-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">🔥</span>
+                        <span class="feature-text">مخبوز يومياً</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">👨‍🍳</span>
+                        <span class="feature-text">حرفي مميز</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🌾</span>
+                        <span class="feature-text">دقيق طبيعي</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bakery-visual">
+                <div class="bakery-icon-large">
+                    <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="خبز">
+                </div>
+                <div class="bakery-icon-large">
+                    <img src="https://images.unsplash.com/photo-1555507036-ab794f9750d6?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="كرواسون">
+                </div>
+                <div class="bakery-icon-large">
+                    <img src="https://images.unsplash.com/photo-1586444248902-2f64eddc13df?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="بيجل">
+                </div>
+                <div class="bakery-icon-large">
+                    <img src="https://images.unsplash.com/photo-1549931319-a545dcf3bc73?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="دونات">
+                </div>
+                <div class="bakery-icon-large">
+                    <img src="https://images.unsplash.com/photo-1571115764595-644a1f56a55c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="مافن">
+                </div>
+                <div class="bakery-icon-large">
+                    <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="كيك">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Bakery Content -->
+<section class="bakery-content">
+    <div class="container">
+        <div class="section-header-bakery">
+            <h2 class="section-title-bakery">تشكيلة متنوعة من المخبوزات</h2>
+            <p class="section-subtitle-bakery">مخبوزات طازجة ولذيذة مختارة بعناية من أفضل الخبازين لتلبي جميع أذواقك ومناسباتك</p>
+        </div>
+
+        <!-- Enhanced Modern Filters -->
+        <div class="bakery-filters">
+            <div class="filters-header">
+                <span class="filters-title">🔍 فلتر وبحث متقدم</span>
+            </div>
+            <form method="GET" class="filters-form">
+                <div class="filters-row">
+                    <div class="filter-group-bakery">
+                        <label class="filter-label-bakery">🔍 ابحث في المخبوزات</label>
+                        <input type="text" name="search" placeholder="ابحث عن الخبز، الكرواسون، البيجل..." 
+                               class="filter-input-bakery" value="{{ request.args.get('search', '') }}">
+                    </div>
+                    
+                    <div class="filter-group-bakery">
+                        <label class="filter-label-bakery">💰 نطاق السعر</label>
+                        <select name="price_range" class="filter-select-bakery">
+                            <option value="">جميع الأسعار</option>
+                            <option value="0-5" {% if request.args.get('price_range') == '0-5' %}selected{% endif %}>$0 - $5</option>
+                            <option value="5-10" {% if request.args.get('price_range') == '5-10' %}selected{% endif %}>$5 - $10</option>
+                            <option value="10+" {% if request.args.get('price_range') == '10+' %}selected{% endif %}>$10+</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group-bakery">
+                        <label class="filter-label-bakery">🍞 النوع</label>
+                        <select name="bakery_type" class="filter-select-bakery">
+                            <option value="">جميع الأنواع</option>
+                            <option value="bread" {% if request.args.get('bakery_type') == 'bread' %}selected{% endif %}>خبز</option>
+                            <option value="pastry" {% if request.args.get('bakery_type') == 'pastry' %}selected{% endif %}>معجنات</option>
+                            <option value="sweet" {% if request.args.get('bakery_type') == 'sweet' %}selected{% endif %}>حلويات</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group-bakery">
+                        <label class="filter-label-bakery">🏷️ الترتيب</label>
+                        <select name="sort" class="filter-select-bakery">
+                            <option value="name" {% if request.args.get('sort') == 'name' %}selected{% endif %}>الاسم أ-ي</option>
+                            <option value="price_low" {% if request.args.get('sort') == 'price_low' %}selected{% endif %}>السعر: منخفض إلى مرتفع</option>
+                            <option value="price_high" {% if request.args.get('sort') == 'price_high' %}selected{% endif %}>السعر: مرتفع إلى منخفض</option>
+                            <option value="popularity" {% if request.args.get('sort') == 'popularity' %}selected{% endif %}>الأكثر شعبية</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="filter-button">
+                        <span>🔍</span>
+                        <span>تطبيق</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Bakery Grid -->
+        <div class="bakery-grid">
+            {% for bakery in bakeries %}
+            <div class="bakery-card">
+                <div class="bakery-badges">
+                    <div class="bakery-badge badge-fresh">طازج</div>
+                    {% if 'حرفي' in bakery.get('description', '') or 'artisan' in bakery.get('description', '') %}
+                    <div class="bakery-badge badge-artisan">حرفي</div>
+                    {% endif %}
+                    {% if bakery.discount > 0 %}
+                    <div class="bakery-badge badge-sale">خصم {{ bakery.discount }}%</div>
+                    {% endif %}
+                </div>
+                
+                <div class="bakery-image">
+                    {% if 'خبز قمح كامل' in bakery.name or 'خبز' in bakery.name %}
+                    <img src="{{ url_for('static', filename='img/products/bakery/خبز قمح كامل.jpg') }}" alt="{{ bakery.name }}" class="bakery-real-image">
+                    {% elif 'كرواسون' in bakery.name %}
+                    <img src="{{ url_for('static', filename='img/products/bakery/كرواسون.jpg') }}" alt="{{ bakery.name }}" class="bakery-real-image">
+                    {% elif 'بيجل' in bakery.name %}
+                    <img src="{{ url_for('static', filename='img/products/bakery/بيجل.jpg') }}" alt="{{ bakery.name }}" class="bakery-real-image">
+                    {% else %}
+                    <span style="font-size: 4rem;">🍞</span>
+                    {% endif %}
+                    <div class="bakery-overlay">
+                        <a href="{{ url_for('product_detail', product_id=bakery.id) }}" class="quick-view-btn-bakery">
+                            ✨ عرض سريع
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="bakery-info">
+                    <h3 class="bakery-name">{{ bakery.name }}</h3>
+                    <p class="bakery-brand">
+                        <img src="https://images.unsplash.com/photo-1497486751825-1233686d5d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="brand" class="brand-logo">
+                        {{ bakery.brand }}
+                    </p>
+                    <p class="bakery-description">{{ bakery.description[:80] }}{% if bakery.description|length > 80 %}...{% endif %}</p>
+                    
+                    {% if bakery.get('nutrients') %}
+                    <div class="bakery-nutrients">
+                        {% for nutrient in bakery.nutrients %}
+                        <span class="nutrient-tag">{{ nutrient }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="bakery-price">
+                        {% if bakery.discount > 0 %}
+                        <span class="price-original">${{ "%.2f"|format(bakery.price) }}</span>
+                        <span class="price-current-bakery">${{ "%.2f"|format(bakery.price * (1 - bakery.discount / 100)) }}</span>
+                        {% else %}
+                        <span class="price-current-bakery">${{ "%.2f"|format(bakery.price) }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <form action="{{ url_for('add_to_cart') }}" method="POST">
+                        <input type="hidden" name="product_id" value="{{ bakery.id }}">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="add-to-cart-btn-bakery" {% if bakery.stock == 0 %}disabled{% endif %}>
+                            {% if bakery.stock == 0 %}
+                                نفد المخزون
+                            {% else %}
+                                <span>🛒</span>
+                                <span>أضف للعربة</span>
+                            {% endif %}
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

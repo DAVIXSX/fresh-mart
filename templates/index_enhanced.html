@@ -1,0 +1,386 @@
+{% extends "base.html" %}
+
+{% block title %}Enhanced FreshMart - Modern Grocery Shopping{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/enhancements.css') }}">
+{% endblock %}
+
+{% block content %}
+<!-- Enhanced Hero Section with Modern Animations -->
+<section class="hero-enhanced">
+    <div class="container">
+        <div class="hero-content-enhanced">
+            <div class="hero-text" data-animate="fadeInUp">
+                <h1 class="hero-title-enhanced">
+                    <span class="title-word" style="animation-delay: 0.2s">بقالة</span>
+                    <span class="title-word" style="animation-delay: 0.4s">طازجة</span>
+                    <span class="title-word" style="animation-delay: 0.6s">مُوصلة</span>
+                </h1>
+                <p class="hero-subtitle-enhanced" data-animate="fadeInUp" style="animation-delay: 0.8s">
+                    تسوق من مجموعتنا الواسعة من المنتجات الطازجة واللحوم عالية الجودة
+                </p>
+                <div class="hero-actions" data-animate="fadeInUp" style="animation-delay: 1s">
+                    <a href="#categories" class="btn btn-enhanced btn-primary-enhanced btn-large">
+                        تسوق الآن
+                        <span class="btn-icon">🛒</span>
+                    </a>
+                    <a href="#deals" class="btn btn-enhanced btn-outline-enhanced btn-large">
+                        العروض الخاصة
+                        <span class="btn-icon">🔥</span>
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image-enhanced" data-animate="fadeInRight" style="animation-delay: 0.6s">
+                <div class="hero-graphic-enhanced">
+                    <div class="floating-icon" style="animation-delay: 0.2s">🛒</div>
+                    <div class="floating-icon" style="animation-delay: 0.4s">🥕</div>
+                    <div class="floating-icon" style="animation-delay: 0.6s">🍎</div>
+                    <div class="floating-icon" style="animation-delay: 0.8s">🥛</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Enhanced Categories Section -->
+<section class="categories-section-enhanced" id="categories">
+    <div class="container">
+        <div class="section-header-enhanced">
+            <h2 class="section-title-enhanced" data-animate="fadeInUp">تسوق بحسب الفئة</h2>
+            <p class="section-subtitle-enhanced" data-animate="fadeInUp" style="animation-delay: 0.2s">
+                اعثر على كل ما تحتاجه في أقسامنا المنظمة
+            </p>
+        </div>
+        
+        <div class="categories-grid-enhanced">
+            {% for category_key, category in categories.items() %}
+            <a href="{{ url_for('category', category_name=category_key) }}" 
+               class="category-card-enhanced" 
+               data-animate="fadeInUp" 
+               style="animation-delay: {{ loop.index * 0.1 }}s">
+                <div class="category-icon-enhanced">{{ category.icon }}</div>
+                <h3 class="category-name-enhanced">{{ category.name }}</h3>
+                <div class="category-hover-enhanced">
+                    <span class="shop-now-enhanced">تسوق الآن ←</span>
+                </div>
+                <div class="category-badge">جديد</div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Enhanced Featured Products -->
+<section class="featured-section-enhanced" data-lazy-load>
+    <div class="container">
+        <div class="section-header-enhanced">
+            <h2 class="section-title-enhanced">منتجات مميزة</h2>
+            <p class="section-subtitle-enhanced">أشهر منتجاتنا هذا الأسبوع</p>
+        </div>
+        
+        <div class="products-grid-enhanced">
+            {% for product in featured_products %}
+            <div class="product-card product-card-enhanced" 
+                 data-animate="fadeInUp" 
+                 style="animation-delay: {{ loop.index * 0.1 }}s">
+                
+                <!-- Enhanced Product Badges -->
+                <div class="product-badges-enhanced">
+                    <div class="product-badge badge-featured">⭐ مميز</div>
+                    {% if product.discount > 0 %}
+                    <div class="product-badge badge-discount">-{{ product.discount }}%</div>
+                    {% endif %}
+                </div>
+                
+                <!-- Enhanced Product Image -->
+                <div class="product-image-enhanced">
+                    <div class="skeleton skeleton-card" id="skeleton-{{ product.id }}"></div>
+                    <span class="product-placeholder-enhanced">📦</span>
+                    <div class="product-overlay-enhanced">
+                        <button class="overlay-btn quick-view-btn" data-product-id="{{ product.id }}">
+                            عرض سريع
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Enhanced Product Info -->
+                <div class="product-info-enhanced">
+                    <h3 class="product-name-enhanced">
+                        <a href="{{ url_for('product_detail', product_id=product.id) }}">{{ product.name }}</a>
+                    </h3>
+                    <p class="product-brand-enhanced">{{ product.brand }}</p>
+                    
+                    <!-- Enhanced Rating -->
+                    <div class="product-rating-enhanced">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <span class="rating-count">({{ (loop.index * 7) % 50 + 10 }})</span>
+                    </div>
+                    
+                    <!-- Enhanced Price Display -->
+                    <div class="product-price-enhanced">
+                        {% if product.discount > 0 %}
+                        <span class="price-original-enhanced">${{ "%.2f"|format(product.price) }}</span>
+                        <span class="price-current-enhanced">${{ "%.2f"|format(product.price * (1 - product.discount / 100)) }}</span>
+                        <div class="savings-badge">وفر ${{ "%.2f"|format(product.price * product.discount / 100) }}</div>
+                        {% else %}
+                        <span class="price-current-enhanced">${{ "%.2f"|format(product.price) }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Enhanced Product Actions -->
+                    <div class="product-actions-enhanced">
+                        <form action="{{ url_for('add_to_cart') }}" method="POST" class="add-to-cart-form">
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <div class="quantity-selector-enhanced">
+                                <button type="button" class="qty-btn minus">-</button>
+                                <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" class="qty-input-enhanced">
+                                <button type="button" class="qty-btn plus">+</button>
+                            </div>
+                            <button type="submit" class="btn btn-enhanced btn-primary-enhanced btn-cart-enhanced">
+                                <span class="btn-text">أضف للعربة</span>
+                                <span class="btn-icon">🛒</span>
+                            </button>
+                        </form>
+                        <button class="btn btn-enhanced btn-outline-enhanced wishlist-btn-enhanced" data-product-id="{{ product.id }}">
+                            <span class="wishlist-icon">🤍</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Enhanced Stock Indicator -->
+                    <div class="stock-indicator-enhanced {% if product.stock > 10 %}in-stock{% elif product.stock > 0 %}low-stock{% else %}out-stock{% endif %}">
+                        {% if product.stock > 10 %}
+                            <span class="stock-icon">✅</span>
+                            <span>متوفر</span>
+                        {% elif product.stock > 0 %}
+                            <span class="stock-icon">⚠️</span>
+                            <span>باقي {{ product.stock }} قطع</span>
+                        {% else %}
+                            <span class="stock-icon">❌</span>
+                            <span>نفد المخزون</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Enhanced Load More Button -->
+        <div class="load-more-section">
+            <button class="btn btn-enhanced btn-outline-enhanced btn-large load-more-btn">
+                عرض المزيد من المنتجات
+                <span class="btn-icon">⬇️</span>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Enhanced Deals Section with Advanced Animations -->
+<section class="deals-section-enhanced" id="deals">
+    <div class="container">
+        <div class="section-header-enhanced">
+            <h2 class="section-title-enhanced">🔥 عروض مميزة</h2>
+            <p class="section-subtitle-enhanced">عروض محدودة الوقت لا تفوتها</p>
+            <div class="countdown-timer">
+                <div class="timer-box">
+                    <span class="timer-number" id="hours">12</span>
+                    <span class="timer-label">ساعة</span>
+                </div>
+                <div class="timer-box">
+                    <span class="timer-number" id="minutes">45</span>
+                    <span class="timer-label">دقيقة</span>
+                </div>
+                <div class="timer-box">
+                    <span class="timer-number" id="seconds">30</span>
+                    <span class="timer-label">ثانية</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="deals-carousel-enhanced">
+            <div class="deals-grid-enhanced">
+                {% for product in discounted_products %}
+                <div class="deal-card deal-card-enhanced" data-animate="slideInRight" style="animation-delay: {{ loop.index * 0.2 }}s">
+                    <!-- Enhanced Deal Badge -->
+                    <div class="deal-badge-enhanced">
+                        <span class="discount-percentage">{{ product.discount }}%</span>
+                        <span class="discount-text">خصم</span>
+                    </div>
+                    
+                    <!-- Enhanced Deal Image -->
+                    <div class="deal-image-enhanced">
+                        <div class="skeleton skeleton-card"></div>
+                        <span class="product-placeholder-enhanced">📦</span>
+                        <div class="deal-overlay">
+                            <div class="deal-timer">
+                                <span class="timer-icon">⏰</span>
+                                <span class="timer-text">ينتهي قريباً</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Enhanced Deal Info -->
+                    <div class="deal-info-enhanced">
+                        <h3 class="deal-name-enhanced">{{ product.name }}</h3>
+                        <p class="deal-brand">{{ product.brand }}</p>
+                        
+                        <div class="deal-prices-enhanced">
+                            <span class="price-original-enhanced">${{ "%.2f"|format(product.price) }}</span>
+                            <span class="price-deal-enhanced">${{ "%.2f"|format(product.price * (1 - product.discount / 100)) }}</span>
+                        </div>
+                        
+                        <div class="deal-savings-enhanced">
+                            <span class="savings-icon">💰</span>
+                            <span>وفر ${{ "%.2f"|format(product.price * product.discount / 100) }}</span>
+                        </div>
+                        
+                        <!-- Enhanced Deal Actions -->
+                        <form action="{{ url_for('add_to_cart') }}" method="POST" class="deal-form-enhanced add-to-cart-form">
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="btn btn-enhanced btn-deal-enhanced">
+                                <span class="btn-text">احصل على العرض</span>
+                                <span class="btn-icon">🛒</span>
+                            </button>
+                        </form>
+                        
+                        <!-- Stock Urgency -->
+                        <div class="stock-urgency">
+                            <div class="urgency-bar">
+                                <div class="urgency-fill" style="width: {{ (product.stock / 20 * 100)|round }}%"></div>
+                            </div>
+                            <span class="urgency-text">باقي {{ product.stock }} قطعة فقط!</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Carousel Navigation -->
+            <div class="carousel-nav">
+                <button class="nav-btn prev-btn" aria-label="Previous">‹</button>
+                <button class="nav-btn next-btn" aria-label="Next">›</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Enhanced Features Section -->
+<section class="features-section-enhanced">
+    <div class="container">
+        <div class="features-grid-enhanced">
+            <div class="feature-card feature-card-enhanced" data-animate="zoomIn" style="animation-delay: 0.2s">
+                <div class="feature-icon-enhanced">🚚</div>
+                <h3 class="feature-title-enhanced">توصيل مجاني</h3>
+                <p class="feature-text-enhanced">توصيل مجاني على الطلبات أكثر من $50</p>
+                <div class="feature-highlight">سريع وآمن</div>
+            </div>
+            <div class="feature-card feature-card-enhanced" data-animate="zoomIn" style="animation-delay: 0.4s">
+                <div class="feature-icon-enhanced">🕒</div>
+                <h3 class="feature-title-enhanced">توصيل في نفس اليوم</h3>
+                <p class="feature-text-enhanced">اطلب قبل الساعة 2 ظهراً للتوصيل في نفس اليوم</p>
+                <div class="feature-highlight">خدمة سريعة</div>
+            </div>
+            <div class="feature-card feature-card-enhanced" data-animate="zoomIn" style="animation-delay: 0.6s">
+                <div class="feature-icon-enhanced">🥬</div>
+                <h3 class="feature-title-enhanced">ضمان الطزاجة</h3>
+                <p class="feature-text-enhanced">100% طازج أو استرداد المال</p>
+                <div class="feature-highlight">جودة مضمونة</div>
+            </div>
+            <div class="feature-card feature-card-enhanced" data-animate="zoomIn" style="animation-delay: 0.8s">
+                <div class="feature-icon-enhanced">💳</div>
+                <h3 class="feature-title-enhanced">دفع آمن</h3>
+                <p class="feature-text-enhanced">مدفوعات آمنة عبر الإنترنت</p>
+                <div class="feature-highlight">حماية كاملة</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Enhanced Newsletter Section -->
+<section class="newsletter-section-enhanced">
+    <div class="container">
+        <div class="newsletter-content-enhanced">
+            <div class="newsletter-text-enhanced" data-animate="fadeInLeft">
+                <h2 class="newsletter-title-enhanced">ابق على تواصل مع فريش مارت</h2>
+                <p class="newsletter-subtitle-enhanced">احصل على عروض أسبوعية وتحديثات المنتجات الطازجة</p>
+                <div class="newsletter-benefits">
+                    <div class="benefit-item">✅ عروض حصرية</div>
+                    <div class="benefit-item">✅ منتجات جديدة</div>
+                    <div class="benefit-item">✅ نصائح الطبخ</div>
+                </div>
+            </div>
+            <form class="newsletter-form-enhanced" data-animate="fadeInRight">
+                <div class="input-group-enhanced">
+                    <input type="email" placeholder="أدخل عنوان بريدك الإلكتروني" class="newsletter-input-enhanced input-enhanced focus-enhanced" required>
+                    <button type="submit" class="btn btn-enhanced btn-primary-enhanced newsletter-btn-enhanced">
+                        <span class="btn-text">اشترك</span>
+                        <span class="btn-icon">📧</span>
+                    </button>
+                </div>
+                <p class="newsletter-privacy">نحترم خصوصيتك ولن نرسل لك رسائل غير مرغوب فيها</p>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/enhancements.js') }}"></script>
+<script>
+// Enhanced page-specific animations
+document.addEventListener('DOMContentLoaded', function() {
+    // Countdown Timer
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const endTime = now + (12 * 60 * 60 * 1000) + (45 * 60 * 1000) + (30 * 1000); // 12:45:30 from now
+        
+        setInterval(() => {
+            const currentTime = new Date().getTime();
+            const timeLeft = endTime - currentTime;
+            
+            const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        }, 1000);
+    }
+    
+    updateCountdown();
+    
+    // Wishlist functionality
+    document.querySelectorAll('.wishlist-btn-enhanced').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const icon = this.querySelector('.wishlist-icon');
+            if (icon.textContent === '🤍') {
+                icon.textContent = '❤️';
+                this.classList.add('active');
+                window.freshMartEnhancements.showEnhancedToast('تم إضافة المنتج للمفضلة', 'success');
+            } else {
+                icon.textContent = '🤍';
+                this.classList.remove('active');
+                window.freshMartEnhancements.showEnhancedToast('تم إزالة المنتج من المفضلة', 'info');
+            }
+        });
+    });
+    
+    // Carousel functionality
+    const carousel = document.querySelector('.deals-grid-enhanced');
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+    
+    if (carousel && prevBtn && nextBtn) {
+        prevBtn.addEventListener('click', () => {
+            carousel.scrollBy({ left: -300, behavior: 'smooth' });
+        });
+        
+        nextBtn.addEventListener('click', () => {
+            carousel.scrollBy({ left: 300, behavior: 'smooth' });
+        });
+    }
+});
+</script>
+{% endblock %}

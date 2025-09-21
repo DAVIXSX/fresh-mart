@@ -1,0 +1,446 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - فريش مارت{% endblock %}
+
+{% block extra_css %}
+<style>
+:root {
+    --dairy-primary: #2196F3;
+    --dairy-secondary: #42A5F5;
+    --dairy-light: #E3F2FD;
+    --dairy-bg: #F3E5F5;
+    --dairy-dark: #1565C0;
+    --dairy-gradient: linear-gradient(135deg, #2196F3, #42A5F5);
+    --dairy-shadow: 0 8px 32px rgba(33, 150, 243, 0.3);
+}
+
+.dairy-hero {
+    background: linear-gradient(135deg, var(--dairy-light) 0%, #BBDEFB 100%);
+    padding: 2rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.dairy-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dairyPattern" width="15" height="15" patternUnits="userSpaceOnUse"><circle cx="7.5" cy="7.5" r="2" fill="rgba(33,150,243,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dairyPattern)"/></svg>');
+    opacity: 0.6;
+}
+
+.dairy-breadcrumb {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 1rem;
+    border-radius: 25px;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 2;
+    backdrop-filter: blur(10px);
+}
+
+.dairy-breadcrumb a {
+    color: var(--dairy-dark);
+    text-decoration: none;
+    font-weight: 500;
+    margin: 0 0.5rem;
+}
+
+.dairy-product-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 0;
+    background: white;
+}
+
+.dairy-main-image {
+    width: 100%;
+    height: 500px;
+    background: linear-gradient(135deg, var(--dairy-light), #BBDEFB);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--dairy-shadow);
+    margin-bottom: 1.5rem;
+}
+
+.dairy-main-image::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.4), transparent);
+    transform: rotate(45deg);
+    animation: dairyShine 5s infinite;
+}
+
+@keyframes dairyShine {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+}
+
+.dairy-placeholder {
+    font-size: 8rem;
+    color: var(--dairy-primary);
+    animation: dairyBounce 4s ease-in-out infinite;
+}
+
+@keyframes dairyBounce {
+    0%, 100% { transform: translateY(0px) scale(1); }
+    25% { transform: translateY(-12px) scale(1.05); }
+    75% { transform: translateY(-6px) scale(1.02); }
+}
+
+.dairy-badges {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.dairy-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.dairy-discount-badge {
+    background: linear-gradient(135deg, #FF5722, #F44336);
+    color: white;
+}
+
+.dairy-fresh-badge {
+    background: linear-gradient(135deg, var(--dairy-primary), var(--dairy-secondary));
+    color: white;
+}
+
+.dairy-header {
+    text-align: center;
+    padding: 2rem;
+    background: linear-gradient(135deg, var(--dairy-light), rgba(255,255,255,0.95));
+    border-radius: 20px;
+    margin-bottom: 2rem;
+}
+
+.dairy-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--dairy-dark);
+    margin-bottom: 0.5rem;
+}
+
+.dairy-brand {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.dairy-rating {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.dairy-stars {
+    font-size: 1.5rem;
+    color: #FFD700;
+}
+
+.dairy-pricing {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: var(--dairy-shadow);
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.dairy-price-current {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--dairy-primary);
+    display: block;
+}
+
+.dairy-price-original {
+    font-size: 1.2rem;
+    color: #999;
+    text-decoration: line-through;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.dairy-savings {
+    background: linear-gradient(135deg, #FF5722, #F44336);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    margin-top: 1rem;
+    display: inline-block;
+}
+
+.dairy-cart-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: var(--dairy-shadow);
+}
+
+.dairy-quantity-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: var(--dairy-light);
+    padding: 1rem;
+    border-radius: 15px;
+    margin-bottom: 1rem;
+}
+
+.dairy-qty-btn {
+    width: 50px;
+    height: 50px;
+    border: none;
+    background: var(--dairy-gradient);
+    color: white;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dairy-qty-btn:hover {
+    transform: scale(1.1);
+}
+
+.dairy-qty-input {
+    width: 100px;
+    height: 50px;
+    text-align: center;
+    border: 2px solid var(--dairy-primary);
+    border-radius: 12px;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.dairy-add-cart-btn {
+    width: 100%;
+    background: var(--dairy-gradient);
+    color: white;
+    border: none;
+    padding: 1.5rem;
+    border-radius: 15px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--dairy-shadow);
+}
+
+.dairy-add-cart-btn:hover {
+    transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+    .dairy-product-layout {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .dairy-title {
+        font-size: 2rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="dairy-hero">
+    <div class="dairy-breadcrumb">
+        <div class="container">
+            <a href="{{ url_for('index') }}">🏠 الرئيسية</a>
+            <span>›</span>
+            <a href="{{ url_for('dairy') }}">🥛 منتجات الألبان</a>
+            <span>›</span>
+            <span>{{ product.name }}</span>
+        </div>
+    </div>
+</section>
+
+<section class="dairy-product-main">
+    <div class="container">
+        <div class="dairy-product-layout">
+            <div class="dairy-product-images">
+                <div class="dairy-main-image">
+                    {% if 'حليب كامل الدسم' in product.name %}
+                    <img src="{{ url_for('static', filename='img/products/dairy/حليب كامل الدسم.jpg') }}" alt="{{ product.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;">
+                    {% elif 'زبادي يوناني' in product.name %}
+                    <img src="{{ url_for('static', filename='img/products/dairy/زبادي يوناني.webp') }}" alt="{{ product.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;">
+                    {% elif 'جبنة شيدر' in product.name %}
+                    <img src="{{ url_for('static', filename='img/products/dairy/جبنة شيدر.jpg') }}" alt="{{ product.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;">
+                    {% elif 'زبدة' in product.name %}
+                    <img src="{{ url_for('static', filename='img/products/dairy/زبدة.avif') }}" alt="{{ product.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;">
+                    {% else %}
+                    <span class="dairy-placeholder">🥛</span>
+                    {% endif %}
+                    
+                    <div class="dairy-badges">
+                        {% if product.discount > 0 %}
+                        <div class="dairy-badge dairy-discount-badge">خصم {{ product.discount }}%</div>
+                        {% endif %}
+                        <div class="dairy-badge dairy-fresh-badge">طازج يومياً</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dairy-product-info">
+                <div class="dairy-header">
+                    <h1 class="dairy-title">{{ product.name }}</h1>
+                    <p class="dairy-brand">من {{ product.brand }}</p>
+                    
+                    <div class="dairy-rating">
+                        <div class="dairy-stars">⭐⭐⭐⭐⭐</div>
+                        <span>({{ (product.id * 9) % 60 + 20 }} تقييم)</span>
+                    </div>
+                </div>
+
+                <div class="dairy-pricing">
+                    {% if product.discount > 0 %}
+                    <span class="dairy-price-original">${{ "%.2f"|format(product.price) }}</span>
+                    <span class="dairy-price-current">${{ "%.2f"|format(product.price * (1 - product.discount / 100)) }}</span>
+                    <div class="dairy-savings">وفر ${{ "%.2f"|format(product.price * product.discount / 100) }}</div>
+                    {% else %}
+                    <span class="dairy-price-current">${{ "%.2f"|format(product.price) }}</span>
+                    {% endif %}
+                    <span style="font-size: 1rem; color: #666;">/ عبوة</span>
+                </div>
+
+                <div class="dairy-cart-section">
+                    <form action="{{ url_for('add_to_cart') }}" method="POST">
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        
+                        <div class="dairy-quantity-selector">
+                            <button type="button" class="dairy-qty-btn minus">−</button>
+                            <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" 
+                                   class="dairy-qty-input" id="dairy-quantity">
+                            <button type="button" class="dairy-qty-btn plus">+</button>
+                        </div>
+
+                        <button type="submit" class="dairy-add-cart-btn" {% if product.stock == 0 %}disabled{% endif %}>
+                            {% if product.stock == 0 %}
+                                نفد من المخزون
+                            {% else %}
+                                🛒 أضف إلى العربة
+                            {% endif %}
+                        </button>
+                    </form>
+                </div>
+
+                <div style="background: var(--dairy-light); padding: 2rem; border-radius: 15px; margin-top: 2rem;">
+                    <h4 style="color: var(--dairy-dark); margin-bottom: 1rem;">🥛 القيم الغذائية:</h4>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                        <div style="text-align: center; padding: 0.5rem;">🦴 كالسيوم</div>
+                        <div style="text-align: center; padding: 0.5rem;">💪 بروتين</div>
+                        <div style="text-align: center; padding: 0.5rem;">🌟 فيتامين د</div>
+                        <div style="text-align: center; padding: 0.5rem;">🧠 فيتامين ب12</div>
+                    </div>
+                    <p><strong>الوصف:</strong> {{ product.description }}</p>
+                    {% if product.stock > 10 %}
+                    <p style="color: var(--dairy-primary); font-weight: 600;">✅ متوفر في المخزون</p>
+                    {% elif product.stock > 0 %}
+                    <p style="color: #FF9800; font-weight: 600;">⚠️ باقي {{ product.stock }} عبوة فقط</p>
+                    {% else %}
+                    <p style="color: #F44336; font-weight: 600;">❌ نفد من المخزون</p>
+                    {% endif %}
+                    <p style="color: var(--dairy-primary); font-weight: 500; font-size: 0.9rem; margin-top: 1rem;">
+                        ❄️ يُحفظ في الثلاجة عند 4°م
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if similar_products %}
+<section style="padding: 4rem 0; background: var(--dairy-bg);">
+    <div class="container">
+        <h2 style="text-align: center; font-size: 2.5rem; font-weight: 700; color: var(--dairy-dark); margin-bottom: 3rem;">
+            🥛 منتجات الألبان الأخرى
+        </h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+            {% for similar in similar_products %}
+            <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: var(--dairy-shadow); transition: transform 0.3s ease;">
+                <div style="height: 200px; background: var(--dairy-light); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+                    {% if 'حليب كامل الدسم' in similar.name %}
+                    <img src="{{ url_for('static', filename='img/products/dairy/حليب كامل الدسم.jpg') }}" alt="{{ similar.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    {% elif 'زبادي يوناني' in similar.name %}
+                    <img src="{{ url_for('static', filename='img/products/dairy/زبادي يوناني.webp') }}" alt="{{ similar.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    {% elif 'جبنة شيدر' in similar.name %}
+                    <img src="{{ url_for('static', filename='img/products/dairy/جبنة شيدر.jpg') }}" alt="{{ similar.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    {% elif 'زبدة' in similar.name %}
+                    <img src="{{ url_for('static', filename='img/products/dairy/زبدة.avif') }}" alt="{{ similar.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    {% else %}
+                    <span style="font-size: 4rem;">🥛</span>
+                    {% endif %}
+                </div>
+                <div style="padding: 1.5rem;">
+                    <h3 style="font-weight: 600; margin-bottom: 0.5rem;">{{ similar.name }}</h3>
+                    <p style="color: #666; margin-bottom: 1rem;">{{ similar.brand }}</p>
+                    <div style="font-size: 1.3rem; font-weight: 700; color: var(--dairy-primary); margin-bottom: 1rem;">
+                        ${{ "%.2f"|format(similar.price * (1 - similar.discount / 100)) }}
+                    </div>
+                    <form action="{{ url_for('add_to_cart') }}" method="POST">
+                        <input type="hidden" name="product_id" value="{{ similar.id }}">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" style="width: 100%; background: var(--dairy-gradient); color: white; border: none; padding: 1rem; border-radius: 12px; font-weight: 600; cursor: pointer;">
+                            أضف للعربة
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelector('.dairy-qty-btn.plus').addEventListener('click', function() {
+    const input = document.getElementById('dairy-quantity');
+    const max = parseInt(input.getAttribute('max'));
+    const current = parseInt(input.value);
+    if (current < max) {
+        input.value = current + 1;
+    }
+});
+
+document.querySelector('.dairy-qty-btn.minus').addEventListener('click', function() {
+    const input = document.getElementById('dairy-quantity');
+    const current = parseInt(input.value);
+    if (current > 1) {
+        input.value = current - 1;
+    }
+});
+</script>
+{% endblock %}

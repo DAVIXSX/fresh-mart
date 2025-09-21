@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - FreshMart{% endblock %}
+
+{% block content %}
+<!-- Product Detail Section -->
+<section class="product-detail">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="{{ url_for('index') }}">Home</a>
+            <span class="breadcrumb-separator">›</span>
+            <a href="{{ url_for('category', category_name=product.category) }}">{{ categories[product.category].name }}</a>
+            <span class="breadcrumb-separator">›</span>
+            <span class="current-page">{{ product.name }}</span>
+        </div>
+
+        <div class="product-detail-content">
+            <!-- Product Images -->
+            <div class="product-images">
+                <div class="main-image">
+                    <span class="product-placeholder-large">📦</span>
+                    {% if product.discount > 0 %}
+                    <div class="product-badge discount-badge">-{{ product.discount }}%</div>
+                    {% endif %}
+                </div>
+                <div class="image-thumbnails">
+                    <div class="thumbnail active">📦</div>
+                    <div class="thumbnail">📸</div>
+                    <div class="thumbnail">🔍</div>
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="product-info">
+                <div class="product-header">
+                    <h1 class="product-title">{{ product.name }}</h1>
+                    <p class="product-brand">by {{ product.brand }}</p>
+                </div>
+
+                <div class="product-pricing">
+                    {% if product.discount > 0 %}
+                    <div class="price-section">
+                        <span class="price-original">${{ "%.2f"|format(product.price) }}</span>
+                        <span class="price-current">${{ "%.2f"|format(product.price * (1 - product.discount / 100)) }}</span>
+                        <span class="savings">You save ${{ "%.2f"|format(product.price * product.discount / 100) }}</span>
+                    </div>
+                    {% else %}
+                    <div class="price-section">
+                        <span class="price-current">${{ "%.2f"|format(product.price) }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="product-description">
+                    <h3>Description</h3>
+                    <p>{{ product.description }}</p>
+                </div>
+
+                {% if product.nutritional_info %}
+                <div class="nutritional-info">
+                    <h3>Nutritional Information</h3>
+                    <p>{{ product.nutritional_info }}</p>
+                </div>
+                {% endif %}
+
+                <div class="stock-info">
+                    <div class="stock-indicator {% if product.stock > 10 %}in-stock{% elif product.stock > 0 %}low-stock{% else %}out-stock{% endif %}">
+                        {% if product.stock > 10 %}
+                            <span class="stock-icon">✓</span>
+                            <span>In Stock</span>
+                        {% elif product.stock > 0 %}
+                            <span class="stock-icon">⚠️</span>
+                            <span>Only {{ product.stock }} left in stock</span>
+                        {% else %}
+                            <span class="stock-icon">❌</span>
+                            <span>Out of Stock</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Add to Cart Section -->
+                <div class="add-to-cart-section">
+                    <form action="{{ url_for('add_to_cart') }}" method="POST" class="product-cart-form">
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        
+                        <div class="quantity-section">
+                            <label for="quantity">Quantity:</label>
+                            <div class="quantity-selector-large">
+                                <button type="button" class="qty-btn minus" onclick="decreaseQuantity()">-</button>
+                                <input type="number" id="quantity" name="quantity" value="1" 
+                                       min="1" max="{{ product.stock }}" class="qty-input-large"
+                                       data-price="{{ "%.2f"|format(product.price * (1 - product.discount / 100)) }}">
+                                <button type="button" class="qty-btn plus" onclick="increaseQuantity()">+</button>
+                            </div>
+                        </div>
+
+                        <div class="cart-actions">
+                            <button type="submit" class="btn btn-primary btn-large" 
+                                    {% if product.stock == 0 %}disabled{% endif %}>
+                                {% if product.stock == 0 %}
+                                    Out of Stock
+                                {% else %}
+                                    Add to Cart - $<span id="total-price">{{ "%.2f"|format(product.price * (1 - product.discount / 100)) }}</span>
+                                {% endif %}
+                            </button>
+                            <button type="button" class="btn btn-outline btn-large wishlist-btn">
+                                ❤️ Add to Wishlist
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Product Features -->
+                <div class="product-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">🚚</span>
+                        <span class="feature-text">Free delivery on orders over $50</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🔄</span>
+                        <span class="feature-text">30-day return policy</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🥬</span>
+                        <span class="feature-text">100% fresh guarantee</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Product Details Tabs -->
+<section class="product-tabs">
+    <div class="container">
+        <div class="tabs-header">
+            <button class="tab-btn active" data-tab="details">Product Details</button>
+            <button class="tab-btn" data-tab="reviews">Reviews (0)</button>
+            <button class="tab-btn" data-tab="shipping">Shipping Info</button>
+        </div>
+
+        <div class="tabs-content">
+            <div class="tab-panel active" id="details">
+                <div class="details-content">
+                    <h3>Product Information</h3>
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <strong>Brand:</strong>
+                            <span>{{ product.brand }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Category:</strong>
+                            <span>{{ categories[product.category].name }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Stock:</strong>
+                            <span>{{ product.stock }} units available</span>
+                        </div>
+                        {% if product.nutritional_info %}
+                        <div class="detail-item">
+                            <strong>Nutritional Info:</strong>
+                            <span>{{ product.nutritional_info }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="description-full">
+                        <h4>Full Description</h4>
+                        <p>{{ product.description }}</p>
+                        <p>This premium quality {{ product.name.lower() }} from {{ product.brand }} is carefully selected to ensure freshness and taste. Perfect for your daily needs and healthy lifestyle.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-panel" id="reviews">
+                <div class="reviews-content">
+                    <div class="reviews-summary">
+                        <h3>Customer Reviews</h3>
+                        <div class="no-reviews">
+                            <p>No reviews yet. Be the first to review this product!</p>
+                            <button class="btn btn-primary">Write a Review</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-panel" id="shipping">
+                <div class="shipping-content">
+                    <h3>Shipping Information</h3>
+                    <div class="shipping-options">
+                        <div class="shipping-option">
+                            <strong>Standard Delivery (2-3 days)</strong>
+                            <p>Free on orders over $50, otherwise $5.99</p>
+                        </div>
+                        <div class="shipping-option">
+                            <strong>Express Delivery (Next day)</strong>
+                            <p>$12.99 for orders under $100, free on orders over $100</p>
+                        </div>
+                        <div class="shipping-option">
+                            <strong>Same Day Delivery</strong>
+                            <p>Available for orders placed before 2 PM - $15.99</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Similar Products -->
+{% if similar_products %}
+<section class="similar-products">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">You Might Also Like</h2>
+            <p class="section-subtitle">Similar products from {{ categories[product.category].name }}</p>
+        </div>
+        <div class="products-grid">
+            {% for similar_product in similar_products %}
+            <div class="product-card">
+                {% if similar_product.discount > 0 %}
+                <div class="product-badge discount-badge">-{{ similar_product.discount }}%</div>
+                {% endif %}
+                
+                <div class="product-image">
+                    <span class="product-placeholder">📦</span>
+                </div>
+                
+                <div class="product-info">
+                    <h3 class="product-name">
+                        <a href="{{ url_for('product_detail', product_id=similar_product.id) }}">{{ similar_product.name }}</a>
+                    </h3>
+                    <p class="product-brand">{{ similar_product.brand }}</p>
+                    
+                    <div class="product-price">
+                        {% if similar_product.discount > 0 %}
+                        <span class="price-original">${{ "%.2f"|format(similar_product.price) }}</span>
+                        <span class="price-discounted">${{ "%.2f"|format(similar_product.price * (1 - similar_product.discount / 100)) }}</span>
+                        {% else %}
+                        <span class="price">${{ "%.2f"|format(similar_product.price) }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <form action="{{ url_for('add_to_cart') }}" method="POST" class="add-to-cart-form">
+                        <input type="hidden" name="product_id" value="{{ similar_product.id }}">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="btn btn-primary btn-small">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Quantity selector functions
+    function increaseQuantity() {
+        const input = document.getElementById('quantity');
+        const max = parseInt(input.getAttribute('max'));
+        const current = parseInt(input.value);
+        if (current < max) {
+            input.value = current + 1;
+            updateTotalPrice();
+        }
+    }
+
+    function decreaseQuantity() {
+        const input = document.getElementById('quantity');
+        const current = parseInt(input.value);
+        if (current > 1) {
+            input.value = current - 1;
+            updateTotalPrice();
+        }
+    }
+
+    function updateTotalPrice() {
+        const quantity = parseInt(document.getElementById('quantity').value);
+        const basePrice = parseFloat(document.getElementById('quantity').getAttribute('data-price'));
+        const totalPrice = (quantity * basePrice).toFixed(2);
+        document.getElementById('total-price').textContent = totalPrice;
+    }
+
+    // Tabs functionality
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const tabId = this.getAttribute('data-tab');
+            
+            // Remove active class from all tabs and panels
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            
+            // Add active class to clicked tab and corresponding panel
+            this.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        });
+    });
+
+    // Image thumbnails functionality
+    document.querySelectorAll('.thumbnail').forEach(thumb => {
+        thumb.addEventListener('click', function() {
+            document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    // Quantity input change listener
+    document.getElementById('quantity').addEventListener('input', updateTotalPrice);
+</script>
+{% endblock %}

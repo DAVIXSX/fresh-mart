@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category.name }} - FreshMart{% endblock %}
+
+{% block content %}
+<!-- Category Header -->
+<section class="category-header">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="{{ url_for('index') }}">Home</a>
+            <span class="breadcrumb-separator">›</span>
+            <span class="current-page">{{ category.name }}</span>
+        </div>
+        <div class="category-title-section">
+            <div class="category-icon-large">{{ category.icon }}</div>
+            <div class="category-info">
+                <h1 class="category-title">{{ category.name }}</h1>
+                <p class="category-description">Fresh and quality {{ category.name.lower() }} for your kitchen</p>
+                <p class="product-count">{{ products|length }} products found</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Search and Filters -->
+<section class="filters-section">
+    <div class="container">
+        <div class="filters-container">
+            <!-- Search Bar -->
+            <div class="search-section">
+                <form action="{{ url_for('category', category_name=request.view_args.category_name) }}" method="GET" class="category-search-form">
+                    <input type="text" name="search" placeholder="Search in {{ category.name }}..." 
+                           class="search-input" value="{{ current_filters.search }}">
+                    <button type="submit" class="search-btn">🔍</button>
+                </form>
+            </div>
+
+            <!-- Filter Toggle Button for Mobile -->
+            <button class="filter-toggle" id="filter-toggle">
+                <span>Filters</span>
+                <span class="filter-icon">⚙️</span>
+            </button>
+
+            <!-- Filters Panel -->
+            <div class="filters-panel" id="filters-panel">
+                <form action="{{ url_for('category', category_name=request.view_args.category_name) }}" method="GET" class="filters-form">
+                    <div class="filter-group">
+                        <label class="filter-label">Sort By:</label>
+                        <select name="sort" class="filter-select">
+                            <option value="name" {% if current_filters.sort == 'name' %}selected{% endif %}>Name A-Z</option>
+                            <option value="price_low" {% if current_filters.sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                            <option value="price_high" {% if current_filters.sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                            <option value="discount" {% if current_filters.sort == 'discount' %}selected{% endif %}>Best Deals</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Price Range:</label>
+                        <div class="price-inputs">
+                            <input type="number" name="min_price" placeholder="Min" step="0.01" 
+                                   class="price-input" value="{{ current_filters.min_price or '' }}">
+                            <span class="price-separator">-</span>
+                            <input type="number" name="max_price" placeholder="Max" step="0.01" 
+                                   class="price-input" value="{{ current_filters.max_price or '' }}">
+                        </div>
+                    </div>
+
+                    {% if brands %}
+                    <div class="filter-group">
+                        <label class="filter-label">Brand:</label>
+                        <select name="brand" class="filter-select">
+                            <option value="">All Brands</option>
+                            {% for brand in brands %}
+                            <option value="{{ brand }}" {% if current_filters.brand == brand %}selected{% endif %}>{{ brand }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endif %}
+
+                    <div class="filter-group">
+                        <label class="filter-checkbox">
+                            <input type="checkbox" name="discount_only" {% if current_filters.discount_only %}checked{% endif %}>
+                            <span class="checkmark">✓</span>
+                            On Sale Only
+                        </label>
+                    </div>
+
+                    <!-- Hidden search field to maintain search when filtering -->
+                    {% if current_filters.search %}
+                    <input type="hidden" name="search" value="{{ current_filters.search }}">
+                    {% endif %}
+
+                    <div class="filter-actions">
+                        <button type="submit" class="btn btn-primary btn-small">Apply Filters</button>
+                        <a href="{{ url_for('category', category_name=request.view_args.category_name) }}" class="btn btn-outline btn-small">Clear All</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Products Grid -->
+<section class="products-section">
+    <div class="container">
+        {% if products %}
+        <div class="products-grid">
+            {% for product in products %}
+            <div class="product-card">
+                {% if product.discount > 0 %}
+                <div class="product-badge discount-badge">-{{ product.discount }}%</div>
+                {% endif %}
+                {% if product.stock <= 5 %}
+                <div class="product-badge stock-badge">Low Stock</div>
+                {% endif %}
+                
+                <div class="product-image">
+                    <span class="product-placeholder">📦</span>
+                    <div class="product-overlay">
+                        <a href="{{ url_for('product_detail', product_id=product.id) }}" class="overlay-btn">Quick View</a>
+                    </div>
+                </div>
+                
+                <div class="product-info">
+                    <h3 class="product-name">
+                        <a href="{{ url_for('product_detail', product_id=product.id) }}">{{ product.name }}</a>
+                    </h3>
+                    <p class="product-brand">{{ product.brand }}</p>
+                    <p class="product-description">{{ product.description[:50] }}{% if product.description|length > 50 %}...{% endif %}</p>
+                    
+                    <div class="product-price">
+                        {% if product.discount > 0 %}
+                        <span class="price-original">${{ "%.2f"|format(product.price) }}</span>
+                        <span class="price-discounted">${{ "%.2f"|format(product.price * (1 - product.discount / 100)) }}</span>
+                        {% else %}
+                        <span class="price">${{ "%.2f"|format(product.price) }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="product-actions">
+                        <form action="{{ url_for('add_to_cart') }}" method="POST" class="add-to-cart-form">
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <div class="quantity-selector">
+                                <button type="button" class="qty-btn minus" onclick="decreaseQuantity(this)">-</button>
+                                <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" class="qty-input">
+                                <button type="button" class="qty-btn plus" onclick="increaseQuantity(this)">+</button>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-cart" {% if product.stock == 0 %}disabled{% endif %}>
+                                {% if product.stock == 0 %}Out of Stock{% else %}Add to Cart{% endif %}
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="product-meta">
+                        <span class="stock-indicator {% if product.stock > 10 %}in-stock{% elif product.stock > 0 %}low-stock{% else %}out-stock{% endif %}">
+                            {% if product.stock > 10 %}
+                                ✓ In Stock
+                            {% elif product.stock > 0 %}
+                                ⚠️ Only {{ product.stock }} left
+                            {% else %}
+                                ❌ Out of Stock
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-products">
+            <div class="no-products-icon">🔍</div>
+            <h3>No products found</h3>
+            <p>Try adjusting your filters or search terms.</p>
+            <a href="{{ url_for('category', category_name=request.view_args.category_name) }}" class="btn btn-primary">Clear Filters</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Quick Actions -->
+<section class="quick-actions">
+    <div class="container">
+        <div class="quick-actions-content">
+            <h3>Need help finding something?</h3>
+            <div class="quick-buttons">
+                <a href="{{ url_for('index') }}#categories" class="btn btn-outline">Browse All Categories</a>
+                <a href="{{ url_for('cart') }}" class="btn btn-primary">View Cart ({{ cart_count }})</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Filter toggle for mobile
+    document.getElementById('filter-toggle').addEventListener('click', function() {
+        const panel = document.getElementById('filters-panel');
+        panel.classList.toggle('active');
+    });
+
+    // Quantity selector functions
+    function increaseQuantity(btn) {
+        const input = btn.parentNode.querySelector('.qty-input');
+        const max = parseInt(input.getAttribute('max'));
+        const current = parseInt(input.value);
+        if (current < max) {
+            input.value = current + 1;
+        }
+    }
+
+    function decreaseQuantity(btn) {
+        const input = btn.parentNode.querySelector('.qty-input');
+        const current = parseInt(input.value);
+        if (current > 1) {
+            input.value = current - 1;
+        }
+    }
+
+    // Auto-submit filters when select changes
+    document.querySelectorAll('.filter-select').forEach(select => {
+        select.addEventListener('change', function() {
+            this.closest('form').submit();
+        });
+    });
+</script>
+{% endblock %}

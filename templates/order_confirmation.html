@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Order Confirmed - FreshMart{% endblock %}
+
+{% block content %}
+<!-- Order Confirmation -->
+<section class="order-confirmation">
+    <div class="container">
+        <div class="confirmation-content">
+            <div class="confirmation-icon">✅</div>
+            <h1 class="confirmation-title">Order Confirmed!</h1>
+            <p class="confirmation-subtitle">Thank you for shopping with FreshMart</p>
+            
+            <div class="order-details">
+                <div class="order-number">
+                    <h3>Order #FM{{ range(100000, 999999) | random }}</h3>
+                    <p>Confirmation sent to your email</p>
+                </div>
+                
+                <div class="delivery-info">
+                    <h4>📦 Your order is being prepared</h4>
+                    <p>We'll send you tracking information once your order ships</p>
+                    <p><strong>Estimated delivery:</strong> 2-3 business days</p>
+                </div>
+            </div>
+
+            <div class="confirmation-actions">
+                <a href="{{ url_for('index') }}" class="btn btn-primary btn-large">Continue Shopping</a>
+                <a href="#" class="btn btn-outline btn-large">Track Your Order</a>
+            </div>
+
+            <div class="what-next">
+                <h3>What happens next?</h3>
+                <div class="next-steps">
+                    <div class="step">
+                        <span class="step-icon">📋</span>
+                        <div class="step-content">
+                            <h4>Order Processing</h4>
+                            <p>We're preparing your fresh groceries</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-icon">📦</span>
+                        <div class="step-content">
+                            <h4>Quality Check</h4>
+                            <p>Each item is checked for freshness</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-icon">🚚</span>
+                        <div class="step-content">
+                            <h4>On the Way</h4>
+                            <p>Your order will be delivered safely</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-icon">🏠</span>
+                        <div class="step-content">
+                            <h4>Delivered</h4>
+                            <p>Fresh groceries at your doorstep</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Customer Service -->
+<section class="customer-service">
+    <div class="container">
+        <div class="service-content">
+            <h3>Need Help?</h3>
+            <p>Our customer service team is here to help with any questions about your order.</p>
+            <div class="contact-options">
+                <div class="contact-option">
+                    <span class="contact-icon">📞</span>
+                    <div class="contact-details">
+                        <h4>Call Us</h4>
+                        <p>(555) 123-4567</p>
+                    </div>
+                </div>
+                <div class="contact-option">
+                    <span class="contact-icon">💬</span>
+                    <div class="contact-details">
+                        <h4>Live Chat</h4>
+                        <p>Available 24/7</p>
+                    </div>
+                </div>
+                <div class="contact-option">
+                    <span class="contact-icon">📧</span>
+                    <div class="contact-details">
+                        <h4>Email</h4>
+                        <p>support@freshmart.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

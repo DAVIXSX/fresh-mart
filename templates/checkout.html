@@ -1,0 +1,346 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout - FreshMart{% endblock %}
+
+{% block content %}
+<!-- Checkout Header -->
+<section class="checkout-header">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="{{ url_for('index') }}">Home</a>
+            <span class="breadcrumb-separator">›</span>
+            <a href="{{ url_for('cart') }}">Cart</a>
+            <span class="breadcrumb-separator">›</span>
+            <span class="current-page">Checkout</span>
+        </div>
+        <h1 class="page-title">Secure Checkout</h1>
+        <div class="checkout-steps">
+            <div class="step active">
+                <span class="step-number">1</span>
+                <span class="step-text">Information</span>
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <span class="step-text">Payment</span>
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                <span class="step-text">Confirmation</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Checkout Content -->
+<section class="checkout-content">
+    <div class="container">
+        <div class="checkout-layout">
+            <!-- Checkout Form -->
+            <div class="checkout-form">
+                <form action="{{ url_for('place_order') }}" method="POST" class="order-form">
+                    <!-- Contact Information -->
+                    <div class="form-section">
+                        <h2 class="section-title">Contact Information</h2>
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" required class="form-input">
+                            <small class="form-hint">We'll send order updates to this email</small>
+                        </div>
+                        <div class="form-checkbox">
+                            <label>
+                                <input type="checkbox" name="newsletter">
+                                <span class="checkmark">✓</span>
+                                Email me with news and offers
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Information -->
+                    <div class="form-section">
+                        <h2 class="section-title">Delivery Information</h2>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="first_name">First Name *</label>
+                                <input type="text" id="first_name" name="first_name" required class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="last_name">Last Name *</label>
+                                <input type="text" id="last_name" name="last_name" required class="form-input">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address *</label>
+                            <input type="text" id="address" name="address" required class="form-input" placeholder="123 Main Street">
+                        </div>
+                        <div class="form-group">
+                            <label for="apartment">Apartment, suite, etc. (optional)</label>
+                            <input type="text" id="apartment" name="apartment" class="form-input">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="city">City *</label>
+                                <input type="text" id="city" name="city" required class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="state">State *</label>
+                                <select id="state" name="state" required class="form-select">
+                                    <option value="">Select State</option>
+                                    <option value="CA">California</option>
+                                    <option value="NY">New York</option>
+                                    <option value="TX">Texas</option>
+                                    <option value="FL">Florida</option>
+                                    <!-- Add more states as needed -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="zip">ZIP Code *</label>
+                                <input type="text" id="zip" name="zip" required class="form-input" pattern="[0-9]{5}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number *</label>
+                            <input type="tel" id="phone" name="phone" required class="form-input" placeholder="(555) 123-4567">
+                        </div>
+                    </div>
+
+                    <!-- Delivery Options -->
+                    <div class="form-section">
+                        <h2 class="section-title">Delivery Options</h2>
+                        <div class="delivery-options">
+                            <label class="delivery-option">
+                                <input type="radio" name="delivery_method" value="standard" checked>
+                                <div class="option-content">
+                                    <div class="option-header">
+                                        <span class="option-title">Standard Delivery</span>
+                                        <span class="option-price">{% if total >= 50 %}FREE{% else %}$5.99{% endif %}</span>
+                                    </div>
+                                    <div class="option-description">2-3 business days</div>
+                                </div>
+                            </label>
+                            <label class="delivery-option">
+                                <input type="radio" name="delivery_method" value="express">
+                                <div class="option-content">
+                                    <div class="option-header">
+                                        <span class="option-title">Express Delivery</span>
+                                        <span class="option-price">$12.99</span>
+                                    </div>
+                                    <div class="option-description">Next business day</div>
+                                </div>
+                            </label>
+                            <label class="delivery-option">
+                                <input type="radio" name="delivery_method" value="same-day">
+                                <div class="option-content">
+                                    <div class="option-header">
+                                        <span class="option-title">Same Day Delivery</span>
+                                        <span class="option-price">$15.99</span>
+                                    </div>
+                                    <div class="option-description">Order by 2 PM</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Payment Information -->
+                    <div class="form-section">
+                        <h2 class="section-title">Payment Information</h2>
+                        <div class="payment-methods">
+                            <label class="payment-method">
+                                <input type="radio" name="payment_method" value="credit" checked>
+                                <span class="method-icon">💳</span>
+                                <span class="method-name">Credit Card</span>
+                            </label>
+                            <label class="payment-method">
+                                <input type="radio" name="payment_method" value="debit">
+                                <span class="method-icon">🏦</span>
+                                <span class="method-name">Debit Card</span>
+                            </label>
+                            <label class="payment-method">
+                                <input type="radio" name="payment_method" value="paypal">
+                                <span class="method-icon">📱</span>
+                                <span class="method-name">PayPal</span>
+                            </label>
+                        </div>
+
+                        <div class="card-details" id="card-details">
+                            <div class="form-group">
+                                <label for="card_number">Card Number *</label>
+                                <input type="text" id="card_number" name="card_number" class="form-input" placeholder="1234 5678 9012 3456" maxlength="19">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="expiry">Expiry Date *</label>
+                                    <input type="text" id="expiry" name="expiry" class="form-input" placeholder="MM/YY" maxlength="5">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cvv">CVV *</label>
+                                    <input type="text" id="cvv" name="cvv" class="form-input" placeholder="123" maxlength="4">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="card_name">Name on Card *</label>
+                                <input type="text" id="card_name" name="card_name" class="form-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Notes -->
+                    <div class="form-section">
+                        <h2 class="section-title">Order Notes (Optional)</h2>
+                        <div class="form-group">
+                            <textarea name="order_notes" class="form-textarea" placeholder="Special delivery instructions, dietary restrictions, etc." rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Place Order Button -->
+                    <div class="form-section">
+                        <button type="submit" class="btn btn-primary btn-large btn-full">
+                            Complete Order
+                        </button>
+                        <p class="form-disclaimer">
+                            By placing your order, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <div class="summary-card">
+                    <h3 class="summary-title">Order Summary</h3>
+                    
+                    <!-- Order Items -->
+                    <div class="summary-items">
+                        {% for item in cart_items %}
+                        <div class="summary-item">
+                            <div class="item-image">
+                                <span class="product-placeholder-small">📦</span>
+                                <span class="item-quantity">{{ item.quantity }}</span>
+                            </div>
+                            <div class="item-details">
+                                <h4 class="item-name">{{ item.product.name }}</h4>
+                                <p class="item-brand">{{ item.product.brand }}</p>
+                                {% if item.product.discount > 0 %}
+                                <span class="item-discount">{{ item.product.discount }}% off</span>
+                                {% endif %}
+                            </div>
+                            <div class="item-price">
+                                ${{ "%.2f"|format(item.total_price) }}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="summary-divider"></div>
+
+                    <!-- Pricing Breakdown -->
+                    <div class="pricing-breakdown">
+                        <div class="pricing-line">
+                            <span>Subtotal:</span>
+                            <span>${{ "%.2f"|format(total) }}</span>
+                        </div>
+                        <div class="pricing-line">
+                            <span>Shipping:</span>
+                            <span class="shipping-cost">
+                                {% if total >= 50 %}FREE{% else %}$5.99{% endif %}
+                            </span>
+                        </div>
+                        <div class="pricing-line">
+                            <span>Tax:</span>
+                            <span>${{ "%.2f"|format(total * 0.08) }}</span>
+                        </div>
+                        <div class="pricing-divider"></div>
+                        <div class="pricing-line total-line">
+                            <span>Total:</span>
+                            <span class="final-total">
+                                ${{ "%.2f"|format(total + (0 if total >= 50 else 5.99) + total * 0.08) }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Badge -->
+                <div class="security-badge">
+                    <div class="badge-icon">🔒</div>
+                    <div class="badge-content">
+                        <h4>Secure Checkout</h4>
+                        <p>Your payment information is encrypted and secure</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Format card number input
+    document.getElementById('card_number').addEventListener('input', function() {
+        let value = this.value.replace(/\s/g, '').replace(/[^0-9]/gi, '');
+        let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+        this.value = formattedValue;
+    });
+
+    // Format expiry date input
+    document.getElementById('expiry').addEventListener('input', function() {
+        let value = this.value.replace(/\D/g, '');
+        if (value.length >= 2) {
+            value = value.substring(0, 2) + '/' + value.substring(2, 4);
+        }
+        this.value = value;
+    });
+
+    // CVV number only
+    document.getElementById('cvv').addEventListener('input', function() {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+
+    // ZIP code validation
+    document.getElementById('zip').addEventListener('input', function() {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+
+    // Phone number formatting
+    document.getElementById('phone').addEventListener('input', function() {
+        let value = this.value.replace(/\D/g, '');
+        if (value.length >= 6) {
+            value = '(' + value.substring(0, 3) + ') ' + value.substring(3, 6) + '-' + value.substring(6, 10);
+        } else if (value.length >= 3) {
+            value = '(' + value.substring(0, 3) + ') ' + value.substring(3);
+        }
+        this.value = value;
+    });
+
+    // Payment method toggle
+    document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const cardDetails = document.getElementById('card-details');
+            if (this.value === 'paypal') {
+                cardDetails.style.display = 'none';
+            } else {
+                cardDetails.style.display = 'block';
+            }
+        });
+    });
+
+    // Form validation
+    document.querySelector('.order-form').addEventListener('submit', function(e) {
+        const requiredFields = this.querySelectorAll('[required]');
+        let isValid = true;
+
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                field.classList.add('error');
+                isValid = false;
+            } else {
+                field.classList.remove('error');
+            }
+        });
+
+        if (!isValid) {
+            e.preventDefault();
+            alert('Please fill in all required fields.');
+        }
+    });
+</script>
+{% endblock %}

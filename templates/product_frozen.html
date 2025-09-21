@@ -1,0 +1,645 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - فريش مارت{% endblock %}
+
+{% block extra_css %}
+<style>
+:root {
+    --frozen-primary: #03A9F4;
+    --frozen-secondary: #0288D1;
+    --frozen-accent: #81D4FA;
+    --frozen-light: #E1F5FE;
+    --frozen-bg: #F0F8FF;
+    --frozen-dark: #01579B;
+    --frozen-gradient: linear-gradient(135deg, #03A9F4, #0288D1);
+    --frozen-shadow: 0 8px 32px rgba(3, 169, 244, 0.3);
+}
+
+.frozen-hero {
+    background: linear-gradient(135deg, var(--frozen-light) 0%, #E3F2FD 50%, #F0F8FF 100%);
+    padding: 2rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.frozen-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="frozenPattern" width="30" height="30" patternUnits="userSpaceOnUse"><polygon points="15,3 21,12 15,21 9,12" fill="rgba(3,169,244,0.08)"/><polygon points="5,8 8,15 5,22 2,15" fill="rgba(3,169,244,0.12)"/><polygon points="25,10 28,17 25,24 22,17" fill="rgba(3,169,244,0.1)"/><polygon points="10,20 13,27 10,34 7,27" fill="rgba(3,169,244,0.09)"/></pattern></defs><rect width="100" height="100" fill="url(%23frozenPattern)"/></svg>');
+    opacity: 0.6;
+    animation: frozenSnowfall 15s linear infinite;
+}
+
+@keyframes frozenSnowfall {
+    0% { transform: translateY(-100px); }
+    100% { transform: translateY(100px); }
+}
+
+.frozen-hero::after {
+    content: '❄️';
+    position: absolute;
+    top: 20%;
+    right: 12%;
+    font-size: 3.5rem;
+    opacity: 0.25;
+    animation: frozenCrystal 8s ease-in-out infinite;
+}
+
+@keyframes frozenCrystal {
+    0%, 100% { 
+        transform: translateY(0px) rotate(0deg) scale(1);
+        filter: brightness(1);
+    }
+    25% { 
+        transform: translateY(-15px) rotate(90deg) scale(1.1);
+        filter: brightness(1.2);
+    }
+    50% { 
+        transform: translateY(-8px) rotate(180deg) scale(1.15);
+        filter: brightness(1.3);
+    }
+    75% { 
+        transform: translateY(-12px) rotate(270deg) scale(1.05);
+        filter: brightness(1.1);
+    }
+}
+
+.frozen-breadcrumb {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 1rem;
+    border-radius: 25px;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 2;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(3, 169, 244, 0.2);
+    direction: rtl;
+    text-align: right;
+}
+
+.frozen-breadcrumb a {
+    color: var(--frozen-dark);
+    text-decoration: none;
+    font-weight: 500;
+    margin: 0 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.frozen-breadcrumb a:hover {
+    color: var(--frozen-primary);
+}
+
+.frozen-product-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 0;
+    background: white;
+}
+
+.frozen-main-image {
+    width: 100%;
+    height: 500px;
+    background: linear-gradient(135deg, var(--frozen-light), #E3F2FD);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--frozen-shadow);
+    margin-bottom: 1.5rem;
+    border: 2px solid rgba(3, 169, 244, 0.1);
+}
+
+.frozen-main-image::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.6), transparent);
+    transform: rotate(45deg);
+    animation: frozenGlisten 5s infinite;
+}
+
+@keyframes frozenGlisten {
+    0% { 
+        transform: translateX(-100%) translateY(-100%) rotate(45deg);
+        opacity: 0;
+    }
+    20% {
+        opacity: 1;
+    }
+    50% { 
+        transform: translateX(100%) translateY(100%) rotate(45deg);
+        opacity: 1;
+    }
+    80% {
+        opacity: 0;
+    }
+    100% { 
+        transform: translateX(-100%) translateY(-100%) rotate(45deg);
+        opacity: 0;
+    }
+}
+
+.frozen-placeholder {
+    font-size: 8rem;
+    color: var(--frozen-primary);
+    animation: frozenFloat 4s ease-in-out infinite;
+    text-shadow: 2px 2px 8px rgba(3, 169, 244, 0.3);
+    filter: drop-shadow(0 0 10px rgba(3, 169, 244, 0.5));
+}
+
+@keyframes frozenFloat {
+    0%, 100% { 
+        transform: translateY(0px) rotate(0deg) scale(1);
+    }
+    25% { 
+        transform: translateY(-12px) rotate(5deg) scale(1.05);
+    }
+    50% { 
+        transform: translateY(-6px) rotate(-3deg) scale(1.08);
+    }
+    75% { 
+        transform: translateY(-9px) rotate(2deg) scale(1.03);
+    }
+}
+
+.frozen-badges {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.frozen-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    backdrop-filter: blur(10px);
+}
+
+.frozen-discount-badge {
+    background: linear-gradient(135deg, #E91E63, #C2185B);
+    color: white;
+    animation: frozenPulse 2s infinite;
+}
+
+@keyframes frozenPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.frozen-fresh-badge {
+    background: linear-gradient(135deg, var(--frozen-primary), var(--frozen-secondary));
+    color: white;
+}
+
+.frozen-quality-badge {
+    background: linear-gradient(135deg, #607D8B, #455A64);
+    color: white;
+}
+
+.frozen-header {
+    text-align: center;
+    padding: 2.5rem;
+    background: linear-gradient(135deg, var(--frozen-light), rgba(255,255,255,0.95));
+    border-radius: 25px;
+    margin-bottom: 2rem;
+    border: 2px solid rgba(3, 169, 244, 0.1);
+    position: relative;
+    overflow: hidden;
+    direction: rtl;
+    text-align: right;
+}
+
+.frozen-header::before {
+    content: '🧊';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    font-size: 2.5rem;
+    opacity: 0.15;
+    animation: frozenIce 6s ease-in-out infinite;
+}
+
+.frozen-header::after {
+    content: '🥶';
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+    font-size: 2rem;
+    opacity: 0.12;
+    animation: frozenIce 8s ease-in-out infinite reverse;
+}
+
+@keyframes frozenIce {
+    0%, 100% { 
+        transform: rotate(0deg) scale(1);
+        filter: brightness(1);
+    }
+    25% { 
+        transform: rotate(15deg) scale(1.1);
+        filter: brightness(1.2);
+    }
+    50% { 
+        transform: rotate(-10deg) scale(1.15);
+        filter: brightness(1.3);
+    }
+    75% { 
+        transform: rotate(8deg) scale(1.05);
+        filter: brightness(1.1);
+    }
+}
+
+.frozen-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--frozen-dark);
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+    text-align: center;
+}
+
+.frozen-brand {
+    font-size: 1.3rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.frozen-rating {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.frozen-stars {
+    font-size: 1.6rem;
+    color: #FFD700;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.frozen-pricing {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 25px;
+    box-shadow: var(--frozen-shadow);
+    text-align: center;
+    margin-bottom: 2rem;
+    border: 2px solid rgba(3, 169, 244, 0.1);
+    position: relative;
+}
+
+.frozen-pricing::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--frozen-gradient);
+    border-radius: 25px 25px 0 0;
+}
+
+.frozen-price-current {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--frozen-primary);
+    display: block;
+    text-shadow: 2px 2px 4px rgba(3, 169, 244, 0.1);
+}
+
+.frozen-price-original {
+    font-size: 1.3rem;
+    color: #999;
+    text-decoration: line-through;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.frozen-savings {
+    background: linear-gradient(135deg, #E91E63, #C2185B);
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 30px;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    display: inline-block;
+    box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+    animation: frozenShiver 3s infinite;
+}
+
+@keyframes frozenShiver {
+    0%, 100% { transform: scale(1) translateX(0px); }
+    25% { transform: scale(1.05) translateX(-2px); }
+    50% { transform: scale(1.08) translateX(0px); }
+    75% { transform: scale(1.05) translateX(2px); }
+}
+
+.frozen-cart-section {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 25px;
+    box-shadow: var(--frozen-shadow);
+    border: 2px solid rgba(3, 169, 244, 0.1);
+}
+
+.frozen-quantity-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+    background: var(--frozen-light);
+    padding: 1.2rem;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(3, 169, 244, 0.2);
+}
+
+.frozen-qty-btn {
+    width: 55px;
+    height: 55px;
+    border: none;
+    background: var(--frozen-gradient);
+    color: white;
+    border-radius: 50%;
+    font-size: 1.6rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(3, 169, 244, 0.3);
+    transform: translateZ(0);
+}
+
+.frozen-qty-btn:hover {
+    transform: scale(1.1) rotate(360deg) translateZ(0);
+    box-shadow: 0 6px 20px rgba(3, 169, 244, 0.4);
+}
+
+.frozen-qty-input {
+    width: 110px;
+    height: 55px;
+    text-align: center;
+    border: 2px solid var(--frozen-primary);
+    border-radius: 15px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    background: white;
+    color: var(--frozen-dark);
+}
+
+.frozen-add-cart-btn {
+    width: 100%;
+    background: var(--frozen-gradient);
+    color: white;
+    border: none;
+    padding: 1.8rem;
+    border-radius: 20px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--frozen-shadow);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+    transform: translateZ(0);
+}
+
+.frozen-add-cart-btn:hover {
+    transform: translateY(-3px) translateZ(0);
+    box-shadow: 0 12px 40px rgba(3, 169, 244, 0.4);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .frozen-hero::before,
+    .frozen-hero::after,
+    .frozen-main-image::before,
+    .frozen-placeholder,
+    .frozen-discount-badge,
+    .frozen-header::before,
+    .frozen-header::after,
+    .frozen-savings {
+        animation: none;
+    }
+    
+    .frozen-qty-btn:hover {
+        transform: scale(1.05) translateZ(0);
+    }
+    
+    .frozen-add-cart-btn:hover {
+        transform: translateY(-1px) translateZ(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .frozen-product-layout {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .frozen-title {
+        font-size: 2rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="frozen-hero">
+    <div class="frozen-breadcrumb">
+        <div class="container">
+            <a href="{{ url_for('index') }}">🏠 الرئيسية</a>
+            <span>›</span>
+            <a href="{{ url_for('frozen') }}">❄️ المجمدات</a>
+            <span>›</span>
+            <span>{{ product.name }}</span>
+        </div>
+    </div>
+</section>
+
+<section class="frozen-product-main">
+    <div class="container">
+        <div class="frozen-product-layout">
+            <div class="frozen-product-images">
+                <div class="frozen-main-image">
+                    {% if 'بيتزا' in product.name %}
+                    <img src="{{ url_for('static', filename='img/products/frozen/بيتزا مجمدة.avif') }}" alt="{{ product.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;">
+                    {% elif 'آيس كريم' in product.name or 'آيس' in product.name %}
+                    <img src="{{ url_for('static', filename='img/products/frozen/آيس كريم.png') }}" alt="{{ product.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;">
+                    {% elif 'خضروات' in product.name %}
+                    <img src="{{ url_for('static', filename='img/products/frozen/خضروات مجمدة.jpg') }}" alt="{{ product.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;">
+                    {% else %}
+                    <img src="{{ url_for('static', filename='img/products/frozen/آيس كريم.png') }}" alt="{{ product.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;">
+                    {% endif %}
+                    <span class="frozen-placeholder" style="display: none;">❄️</span>
+                    
+                    <div class="frozen-badges">
+                        {% if product.discount > 0 %}
+                        <div class="frozen-badge frozen-discount-badge">خصم {{ product.discount }}%</div>
+                        {% endif %}
+                        <div class="frozen-badge frozen-fresh-badge">مجمد طازج</div>
+                        <div class="frozen-badge frozen-quality-badge">جودة عالية</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="frozen-product-info">
+                <div class="frozen-header">
+                    <h1 class="frozen-title">{{ product.name }}</h1>
+                    <p class="frozen-brand">من {{ product.brand }}</p>
+                    
+                    <div class="frozen-rating">
+                        <div class="frozen-stars">⭐⭐⭐⭐⭐</div>
+                        <span>({{ (product.id * 29) % 88 + 42 }} تقييم)</span>
+                    </div>
+                </div>
+
+                <div class="frozen-pricing">
+                    {% if product.discount > 0 %}
+                    <span class="frozen-price-original">${{ "%.2f"|format(product.price) }}</span>
+                    <span class="frozen-price-current">${{ "%.2f"|format(product.price * (1 - product.discount / 100)) }}</span>
+                    <div class="frozen-savings">وفر ${{ "%.2f"|format(product.price * product.discount / 100) }}</div>
+                    {% else %}
+                    <span class="frozen-price-current">${{ "%.2f"|format(product.price) }}</span>
+                    {% endif %}
+                    <span style="font-size: 1rem; color: #666;">/ عبوة</span>
+                </div>
+
+                <div class="frozen-cart-section">
+                    <form action="{{ url_for('add_to_cart') }}" method="POST">
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        
+                        <div class="frozen-quantity-selector">
+                            <button type="button" class="frozen-qty-btn minus">−</button>
+                            <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" 
+                                   class="frozen-qty-input" id="frozen-quantity">
+                            <button type="button" class="frozen-qty-btn plus">+</button>
+                        </div>
+
+                        <button type="submit" class="frozen-add-cart-btn" {% if product.stock == 0 %}disabled{% endif %}>
+                            {% if product.stock == 0 %}
+                                نفد من المخزون
+                            {% else %}
+                                🛒 أضف إلى العربة
+                            {% endif %}
+                        </button>
+                    </form>
+                </div>
+
+                <div style="background: var(--frozen-light); padding: 2rem; border-radius: 15px; margin-top: 2rem; border: 1px solid rgba(3, 169, 244, 0.2);">
+                    <h4 style="color: var(--frozen-dark); margin-bottom: 1rem;">❄️ معلومات التجميد:</h4>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                        <div style="text-align: center; padding: 0.5rem; background: white; border-radius: 8px;">🌡️ تجميد سريع</div>
+                        <div style="text-align: center; padding: 0.5rem; background: white; border-radius: 8px;">⏰ صلاحية طويلة</div>
+                        <div style="text-align: center; padding: 0.5rem; background: white; border-radius: 8px;">🥗 محافظ على الطعم</div>
+                        <div style="text-align: center; padding: 0.5rem; background: white; border-radius: 8px;">🔒 محكم الإغلاق</div>
+                    </div>
+                    <p><strong>الوصف:</strong> {{ product.description }}</p>
+                    {% if product.stock > 10 %}
+                    <p style="color: var(--frozen-primary); font-weight: 600;">✅ متوفر في المخزون</p>
+                    {% elif product.stock > 0 %}
+                    <p style="color: #FF9800; font-weight: 600;">⚠️ باقي {{ product.stock }} عبوة فقط</p>
+                    {% else %}
+                    <p style="color: #F44336; font-weight: 600;">❌ نفد من المخزون</p>
+                    {% endif %}
+                    <div style="margin-top: 1rem; padding: 1rem; background: rgba(3, 169, 244, 0.1); border-radius: 10px;">
+                        <p style="color: var(--frozen-dark); font-weight: 500; font-size: 0.95rem; margin: 0;">
+                            ❄️ تجميد فوري • 🚫 بدون إضافات • 🏆 جودة مضمونة
+                        </p>
+                    </div>
+                    <div style="margin-top: 1rem; padding: 1rem; background: rgba(1, 87, 155, 0.1); border-radius: 10px;">
+                        <p style="color: #01579B; font-weight: 600; font-size: 0.9rem; margin: 0;">
+                            💡 نصيحة: يُحفظ في الفريزر عند -18°م، لا يُذوب ويُجمد مرة أخرى
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if similar_products %}
+<section style="padding: 4rem 0; background: var(--frozen-bg);">
+    <div class="container">
+        <h2 style="text-align: center; font-size: 2.5rem; font-weight: 700; color: var(--frozen-dark); margin-bottom: 3rem;">
+            ❄️ مجمدات أخرى عالية الجودة
+        </h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+            {% for similar in similar_products %}
+            <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: var(--frozen-shadow); transition: transform 0.3s ease; border: 1px solid rgba(3, 169, 244, 0.1);">
+                <div style="height: 200px; background: var(--frozen-light); display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 20px 20px 0 0;">
+                    {% if 'بيتزا' in similar.name %}
+                    <img src="{{ url_for('static', filename='img/products/frozen/بيتزا مجمدة.avif') }}" alt="{{ similar.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    {% elif 'آيس كريم' in similar.name or 'آيس' in similar.name %}
+                    <img src="{{ url_for('static', filename='img/products/frozen/آيس كريم.png') }}" alt="{{ similar.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    {% elif 'خضروات' in similar.name %}
+                    <img src="{{ url_for('static', filename='img/products/frozen/خضروات مجمدة.jpg') }}" alt="{{ similar.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    {% else %}
+                    <img src="{{ url_for('static', filename='img/products/frozen/آيس كريم.png') }}" alt="{{ similar.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    {% endif %}
+                </div>
+                <div style="padding: 1.5rem;">
+                    <h3 style="font-weight: 600; margin-bottom: 0.5rem; color: var(--frozen-dark);">{{ similar.name }}</h3>
+                    <p style="color: #666; margin-bottom: 1rem;">{{ similar.brand }}</p>
+                    <div style="font-size: 1.4rem; font-weight: 700; color: var(--frozen-primary); margin-bottom: 1rem;">
+                        ${{ "%.2f"|format(similar.price * (1 - similar.discount / 100)) }}
+                    </div>
+                    <form action="{{ url_for('add_to_cart') }}" method="POST">
+                        <input type="hidden" name="product_id" value="{{ similar.id }}">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" style="width: 100%; background: var(--frozen-gradient); color: white; border: none; padding: 1rem; border-radius: 12px; font-weight: 600; cursor: pointer; transition: transform 0.3s ease;">
+                            أضف للعربة
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelector('.frozen-qty-btn.plus').addEventListener('click', function() {
+    const input = document.getElementById('frozen-quantity');
+    const max = parseInt(input.getAttribute('max'));
+    const current = parseInt(input.value);
+    if (current < max) {
+        input.value = current + 1;
+    }
+});
+
+document.querySelector('.frozen-qty-btn.minus').addEventListener('click', function() {
+    const input = document.getElementById('frozen-quantity');
+    const current = parseInt(input.value);
+    if (current > 1) {
+        input.value = current - 1;
+    }
+});
+</script>
+{% endblock %}

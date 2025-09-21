@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}فريش مارت - سوبر ماركت أون لاين{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Enhanced UI Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/enhancements.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/enhanced-components.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <!-- شعار -->
+                <div class="logo">
+                    <a href="{{ url_for('index') }}">
+                        <span class="logo-icon">🛒</span>
+                        <span class="logo-text">فريش مارت</span>
+                    </a>
+                </div>
+
+                <!-- شريط البحث -->
+                <div class="search-container">
+                    <form action="{{ url_for('search') }}" method="GET" class="search-form">
+                        <input type="text" name="q" placeholder="ابحث عن المنتجات..." 
+                               class="search-input" value="{{ request.args.get('q', '') }}">
+                        <button type="submit" class="search-btn">🔍</button>
+                    </form>
+                </div>
+
+    <!-- رموز التنقل -->
+    <div class="header-actions">
+        <a href="{{ url_for('cart') }}" class="cart-link">
+            <span class="cart-icon">🛒</span>
+            <span class="cart-count" id="cart-count">{{ cart_count }}</span>
+        </a>
+        <button class="menu-toggle" id="menu-toggle" aria-label="تبديل القائمة">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+
+    <!-- قائمة الهاتف المحمول -->
+    <div class="mobile-menu" id="mobile-menu">
+        <div class="mobile-menu-header">
+            <div class="logo">
+                <a href="{{ url_for('index') }}">
+                    <span class="logo-icon">🛒</span>
+                    <span class="logo-text">فريش مارت</span>
+                </a>
+            </div>
+            <button class="mobile-close" id="mobile-close" aria-label="إغلاق القائمة">×</button>
+        </div>
+        <ul class="mobile-nav-list">
+            <li class="mobile-nav-item">
+                <a href="{{ url_for('index') }}" class="mobile-nav-link">🏠 الرئيسية</a>
+            </li>
+            <li class="mobile-nav-item mobile-dropdown" id="mobile-categories">
+                <a href="#" class="mobile-nav-link mobile-dropdown-toggle">
+                    <span>📂 الأقسام</span>
+                    <span class="mobile-dropdown-arrow">▼</span>
+                </a>
+                <div class="mobile-dropdown-menu">
+                    <a href="{{ url_for('vegetables') }}" class="mobile-dropdown-item">🥕 الخضروات</a>
+                    <a href="{{ url_for('fruits') }}" class="mobile-dropdown-item">🍎 الفواكه</a>
+                    <a href="{{ url_for('legumes') }}" class="mobile-dropdown-item">🥘 البقوليات</a>
+                    <a href="{{ url_for('dairy') }}" class="mobile-dropdown-item">🥛 منتجات الألبان</a>
+                    <a href="{{ url_for('bakery') }}" class="mobile-dropdown-item">🍞 المخبوزات</a>
+                    <a href="{{ url_for('frozen') }}" class="mobile-dropdown-item">🧊 الأطعمة المجمدة</a>
+                    <a href="{{ url_for('beverages') }}" class="mobile-dropdown-item">🥤 المشروبات</a>
+                    <a href="{{ url_for('snacks') }}" class="mobile-dropdown-item">🍿 الوجبات الخفيفة</a>
+                    <a href="{{ url_for('household') }}" class="mobile-dropdown-item">🧴 المنظفات</a>
+                </div>
+            </li>
+            <li class="mobile-nav-item">
+                <a href="{{ url_for('cart') }}" class="mobile-nav-link">🛒 عربة التسوق</a>
+            </li>
+        </ul>
+    </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- التنقل المحسن -->
+    <nav class="navbar-enhanced" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <!-- الروابط الرئيسية -->
+                <div class="nav-primary">
+                    <a href="{{ url_for('index') }}" class="nav-link-enhanced home-link">
+                        <span class="nav-icon">🏠</span>
+                        <span class="nav-text">الرئيسية</span>
+                        <div class="nav-indicator"></div>
+                    </a>
+                    
+                    <!-- قائمة الأقسام المنسدلة -->
+                    <div class="nav-dropdown">
+                        <button class="nav-link-enhanced dropdown-trigger" aria-haspopup="true" aria-expanded="false">
+                            <span class="nav-icon">📂</span>
+                            <span class="nav-text">الأقسام</span>
+                            <span class="dropdown-arrow">▼</span>
+                            <div class="nav-indicator"></div>
+                        </button>
+                        <div class="dropdown-panel">
+                            <div class="dropdown-content">
+                                <div class="dropdown-section">
+                                    <h4 class="dropdown-title">الأطعمة الطازجة</h4>
+                                    <div class="dropdown-items">
+                                        <a href="{{ url_for('vegetables') }}" class="dropdown-link vegetables">
+                                            <span class="dropdown-icon">🥕</span>
+                                            <div class="dropdown-info">
+                                                <span class="dropdown-name">الخضروات</span>
+                                                <span class="dropdown-desc">طازجة ومتنوعة</span>
+                                            </div>
+                                        </a>
+                                        <a href="{{ url_for('fruits') }}" class="dropdown-link fruits">
+                                            <span class="dropdown-icon">🍎</span>
+                                            <div class="dropdown-info">
+                                                <span class="dropdown-name">الفواكه</span>
+                                                <span class="dropdown-desc">حلوة ومنعشة</span>
+                                            </div>
+                                        </a>
+                                        <a href="{{ url_for('legumes') }}" class="dropdown-link legumes">
+                                            <span class="dropdown-icon">🥘</span>
+                                            <div class="dropdown-info">
+                                                <span class="dropdown-name">البقوليات</span>
+                                                <span class="dropdown-desc">غنية بالبروتين</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <div class="dropdown-section">
+                                    <h4 class="dropdown-title">منتجات الألبان والخبز</h4>
+                                    <div class="dropdown-items">
+                                        <a href="{{ url_for('dairy') }}" class="dropdown-link dairy">
+                                            <span class="dropdown-icon">🥛</span>
+                                            <div class="dropdown-info">
+                                                <span class="dropdown-name">منتجات الألبان</span>
+                                                <span class="dropdown-desc">طازجة ومغذية</span>
+                                            </div>
+                                        </a>
+                                        <a href="{{ url_for('bakery') }}" class="dropdown-link bakery">
+                                            <span class="dropdown-icon">🍞</span>
+                                            <div class="dropdown-info">
+                                                <span class="dropdown-name">المخبوزات</span>
+                                                <span class="dropdown-desc">طازجة يومياً</span>
+                                            </div>
+                                        </a>
+                                        <a href="{{ url_for('frozen') }}" class="dropdown-link frozen">
+                                            <span class="dropdown-icon">🧊</span>
+                                            <div class="dropdown-info">
+                                                <span class="dropdown-name">الأطعمة المجمدة</span>
+                                                <span class="dropdown-desc">محفوظة بجودة</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <div class="dropdown-section">
+                                    <h4 class="dropdown-title">المشروبات والوجبات</h4>
+                                    <div class="dropdown-items">
+                                        <a href="{{ url_for('beverages') }}" class="dropdown-link beverages">
+                                            <span class="dropdown-icon">🥤</span>
+                                            <div class="dropdown-info">
+                                                <span class="dropdown-name">المشروبات</span>
+                                                <span class="dropdown-desc">منعشة ومتنوعة</span>
+                                            </div>
+                                        </a>
+                                        <a href="{{ url_for('snacks') }}" class="dropdown-link snacks">
+                                            <span class="dropdown-icon">🍿</span>
+                                            <div class="dropdown-info">
+                                                <span class="dropdown-name">الوجبات الخفيفة</span>
+                                                <span class="dropdown-desc">لذيذة ومقرمشة</span>
+                                            </div>
+                                        </a>
+                                        <a href="{{ url_for('household') }}" class="dropdown-link household">
+                                            <span class="dropdown-icon">🧴</span>
+                                            <div class="dropdown-info">
+                                                <span class="dropdown-name">المنظفات</span>
+                                                <span class="dropdown-desc">فعالة وآمنة</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- روابط إضافية -->
+                <div class="nav-secondary">
+                    <a href="{{ url_for('cart') }}" class="nav-link-enhanced cart-link-nav">
+                        <span class="nav-icon">🛒</span>
+                        <span class="nav-text">عربة التسوق</span>
+                        <span class="cart-badge" id="nav-cart-count">{{ cart_count }}</span>
+                        <div class="nav-indicator"></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>حول فريش مارت</h3>
+                    <p>سوبر ماركتكم الموثوق عبر الإنترنت لتوصيل البقالة الطازجة والمستلزمات المنزلية إلى باب منزلكم.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>خدمة العملاء</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">اتصل بنا</a></li>
+                        <li><a href="#">الأسئلة الشائعة</a></li>
+                        <li><a href="#">معلومات الشحن</a></li>
+                        <li><a href="#">الإرجاع</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">من نحن</a></li>
+                        <li><a href="#">سياسة الخصوصية</a></li>
+                        <li><a href="#">شروط الخدمة</a></li>
+                        <li><a href="#">الوظائف</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>تواصل معنا</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📘</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">🐦</a>
+                        <a href="#" class="social-link">📧</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 فريش مارت. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loading-spinner">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <!-- Enhanced UI Functionality -->
+    <script src="{{ url_for('static', filename='js/enhancements.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
