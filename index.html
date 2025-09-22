@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فريش مارت - بقالة طازجة مُوصلة</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <!-- شعار -->
+                <div class="logo">
+                    <a href="index.html">
+                        <span class="logo-icon">🛒</span>
+                        <span class="logo-text">فريش مارت</span>
+                    </a>
+                </div>
+
+                <!-- شريط البحث -->
+                <div class="search-container">
+                    <form class="search-form">
+                        <input type="text" name="q" placeholder="ابحث عن المنتجات..." 
+                               class="search-input">
+                        <button type="submit" class="search-btn">🔍</button>
+                    </form>
+                </div>
+
+                <!-- رموز التنقل -->
+                <div class="header-actions">
+                    <a href="cart.html" class="cart-link">
+                        <span class="cart-icon">🛒</span>
+                        <span class="cart-count" id="cart-count">0</span>
+                    </a>
+                    <button class="menu-toggle" id="menu-toggle" aria-label="تبديل القائمة">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+
+                <!-- قائمة الهاتف المحمول -->
+                <div class="mobile-menu" id="mobile-menu">
+                    <div class="mobile-menu-header">
+                        <div class="logo">
+                            <a href="index.html">
+                                <span class="logo-icon">🛒</span>
+                                <span class="logo-text">فريش مارت</span>
+                            </a>
+                        </div>
+                        <button class="mobile-close" id="mobile-close" aria-label="إغلاق القائمة">×</button>
+                    </div>
+                    <ul class="mobile-nav-list">
+                        <li class="mobile-nav-item">
+                            <a href="index.html" class="mobile-nav-link">🏠 الرئيسية</a>
+                        </li>
+                        <li class="mobile-nav-item mobile-dropdown" id="mobile-categories">
+                            <a href="#" class="mobile-nav-link mobile-dropdown-toggle">
+                                <span>📂 الأقسام</span>
+                                <span class="mobile-dropdown-arrow">▼</span>
+                            </a>
+                            <div class="mobile-dropdown-menu">
+                                <a href="category-vegetables.html" class="mobile-dropdown-item">🥕 الخضروات</a>
+                                <a href="category-fruits.html" class="mobile-dropdown-item">🍎 الفواكه</a>
+                                <a href="category-legumes.html" class="mobile-dropdown-item">🥘 البقوليات</a>
+                                <a href="category-dairy.html" class="mobile-dropdown-item">🥛 منتجات الألبان</a>
+                                <a href="category-bakery.html" class="mobile-dropdown-item">🍞 المخبوزات</a>
+                                <a href="category-frozen.html" class="mobile-dropdown-item">🧊 الأطعمة المجمدة</a>
+                                <a href="category-beverages.html" class="mobile-dropdown-item">🥤 المشروبات</a>
+                                <a href="category-snacks.html" class="mobile-dropdown-item">🍿 الوجبات الخفيفة</a>
+                                <a href="category-household.html" class="mobile-dropdown-item">🧴 المنظفات</a>
+                            </div>
+                        </li>
+                        <li class="mobile-nav-item">
+                            <a href="cart.html" class="mobile-nav-link">🛒 عربة التسوق</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- التنقل المحسن -->
+    <nav class="navbar-enhanced" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <!-- الروابط الرئيسية -->
+                <div class="nav-primary">
+                    <a href="index.html" class="nav-link-enhanced home-link">
+                        <span class="nav-icon">🏠</span>
+                        <span class="nav-text">الرئيسية</span>
+                        <div class="nav-indicator"></div>
+                    </a>
+                    
+                    <!-- قائمة الأقسام المنسدلة -->
+                    <div class="nav-dropdown">
+                        <button class="nav-link-enhanced dropdown-trigger" aria-haspopup="true" aria-expanded="false">
+                            <span class="nav-icon">📂</span>
+                            <span class="nav-text">الأقسام</span>
+                            <span class="dropdown-arrow">▼</span>
+                            <div class="nav-indicator"></div>
+                        </button>
+                        <div class="dropdown-panel">
+                            <div class="dropdown-content">
+                                <div class="dropdown-section">
+                                    <h4 class="dropdown-title">الأطعمة الطازجة</h4>
+                                    <div class="dropdown-items">
+                                        <a href="category-vegetables.html" class="dropdown-link vegetables">
+                                            <span class="dropdown-icon">🥕</span>
+                                            <div class="dropdown-info">
+                                                <span class="dropdown-name">الخضروات</span>
+                                                <span class="dropdown-desc">طازجة ومتنوعة</span>
+                                            </div>
+                                        </a>
+                                        <a href="category-fruits.html" class="dropdown-link fruits">
+                                            <span class="dropdown-icon">🍎</span>
+                                            <div class="dropdown-info">
+                                                <span class="dropdown-name">الفواكه</span>
+                                                <span class="dropdown-desc">حلوة ومنعشة</span>
+                                            </div>
+                                        </a>
+                                        <a href="category-legumes.html" class="dropdown-link legumes">
+                                            <span class="dropdown-icon">🥘</span>
+                                            <div class="dropdown-info">
+                                                <span class="dropdown-name">البقوليات</span>
+                                                <span class="dropdown-desc">غنية بالبروتين</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <div class="dropdown-section">
+                                    <h4 class="dropdown-title">منتجات الألبان والخبز</h4>
+                                    <div class="dropdown-items">
+                                        <a href="category-dairy.html" class="dropdown-link dairy">
+                                            <span class="dropdown-icon">🥛</span>
+                                            <div class="dropdown-info">
+                                                <span class="dropdown-name">منتجات الألبان</span>
+                                                <span class="dropdown-desc">طازجة ومغذية</span>
+                                            </div>
+                                        </a>
+                                        <a href="category-bakery.html" class="dropdown-link bakery">
+                                            <span class="dropdown-icon">🍞</span>
+                                            <div class="dropdown-info">
+                                                <span class="dropdown-name">المخبوزات</span>
+                                                <span class="dropdown-desc">طازجة يومياً</span>
+                                            </div>
+                                        </a>
+                                        <a href="category-frozen.html" class="dropdown-link frozen">
+                                            <span class="dropdown-icon">🧊</span>
+                                            <div class="dropdown-info">
+                                                <span class="dropdown-name">الأطعمة المجمدة</span>
+                                                <span class="dropdown-desc">محفوظة بجودة</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <div class="dropdown-section">
+                                    <h4 class="dropdown-title">المشروبات والوجبات</h4>
+                                    <div class="dropdown-items">
+                                        <a href="category-beverages.html" class="dropdown-link beverages">
+                                            <span class="dropdown-icon">🥤</span>
+                                            <div class="dropdown-info">
+                                                <span class="dropdown-name">المشروبات</span>
+                                                <span class="dropdown-desc">منعشة ومتنوعة</span>
+                                            </div>
+                                        </a>
+                                        <a href="category-snacks.html" class="dropdown-link snacks">
+                                            <span class="dropdown-icon">🍿</span>
+                                            <div class="dropdown-info">
+                                                <span class="dropdown-name">الوجبات الخفيفة</span>
+                                                <span class="dropdown-desc">لذيذة ومقرمشة</span>
+                                            </div>
+                                        </a>
+                                        <a href="category-household.html" class="dropdown-link household">
+                                            <span class="dropdown-icon">🧴</span>
+                                            <div class="dropdown-info">
+                                                <span class="dropdown-name">المنظفات</span>
+                                                <span class="dropdown-desc">فعالة وآمنة</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- روابط إضافية -->
+                <div class="nav-secondary">
+                    <a href="cart.html" class="nav-link-enhanced cart-link-nav">
+                        <span class="nav-icon">🛒</span>
+                        <span class="nav-text">عربة التسوق</span>
+                        <span class="cart-badge" id="nav-cart-count">0</span>
+                        <div class="nav-indicator"></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- قسم البطل -->
+        <section class="hero">
+            <div class="hero-slider">
+                <div class="hero-slide active">
+                    <div class="container">
+                        <div class="hero-content">
+                            <div class="hero-text">
+                                <h1 class="hero-title">بقالة طازجة<br>مُوصلة إلى باب منزلك</h1>
+                                <p class="hero-subtitle">تسوق من مجموعتنا الواسعة من المنتجات الطازجة واللحوم عالية الجودة والمستلزمات المنزلية</p>
+                                <div class="hero-actions">
+                                    <a href="#categories" class="btn btn-primary btn-large">تسوق الآن</a>
+                                </div>
+                            </div>
+                            <div class="hero-image">
+                                <div class="hero-graphic">
+                                    <div class="floating-icon">🛒</div>
+                                    <div class="floating-icon">🥕</div>
+                                    <div class="floating-icon">🍎</div>
+                                    <div class="floating-icon">🥛</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-slide">
+                    <div class="container">
+                        <div class="hero-content">
+                            <div class="hero-text">
+                                <h1 class="hero-title">عروض خاصة<br>خصم يصل إلى 25%</h1>
+                                <p class="hero-subtitle">لا تفوت عروضنا المذهلة على الفواكه والخضروات الطازجة وأكثر!</p>
+                                <div class="hero-actions">
+                                    <a href="#deals" class="btn btn-secondary btn-large">عرض الصفقات</a>
+                                </div>
+                            </div>
+                            <div class="hero-image">
+                                <div class="hero-graphic">
+                                    <div class="floating-icon">💰</div>
+                                    <div class="floating-icon">🎉</div>
+                                    <div class="floating-icon">🛍️</div>
+                                    <div class="floating-icon">✨</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-nav">
+                <button class="hero-nav-btn active" data-slide="0" aria-label="شريحة 1"></button>
+                <button class="hero-nav-btn" data-slide="1" aria-label="شريحة 2"></button>
+            </div>
+        </section>
+
+        <!-- قسم الفئات -->
+        <section class="categories-section" id="categories">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">تسوق بحسب الفئة</h2>
+                    <p class="section-subtitle">اعثر على كل ما تحتاجه في أقسامنا المنظمة</p>
+                </div>
+                <div class="categories-grid">
+                    <!-- Categories will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- قسم المنتجات المميزة -->
+        <section class="featured-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">منتجات مميزة</h2>
+                    <p class="section-subtitle">أشهر منتجاتنا هذا الأسبوع</p>
+                </div>
+                <div class="products-grid">
+                    <!-- Featured products will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- قسم الصفقات -->
+        <section class="deals-section" id="deals">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">🔥 عروض مميزة</h2>
+                    <p class="section-subtitle">عروض محدودة الوقت لا تفوتها</p>
+                </div>
+                <div class="deals-grid">
+                    <!-- Discounted products will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- قسم الميزات -->
+        <section class="features-section">
+            <div class="container">
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🚚</div>
+                        <h3 class="feature-title">توصيل مجاني</h3>
+                        <p class="feature-text">توصيل مجاني على الطلبات أكثر من $50</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🕒</div>
+                        <h3 class="feature-title">توصيل في نفس اليوم</h3>
+                        <p class="feature-text">اطلب قبل الساعة 2 ظهراً للتوصيل في نفس اليوم</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🥬</div>
+                        <h3 class="feature-title">ضمان الطزاجة</h3>
+                        <p class="feature-text">100% طازج أو استرداد المال</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💳</div>
+                        <h3 class="feature-title">دفع آمن</h3>
+                        <p class="feature-text">مدفوعات آمنة عبر الإنترنت</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- قسش النشرة الإخبارية -->
+        <section class="newsletter-section">
+            <div class="container">
+                <div class="newsletter-content">
+                    <div class="newsletter-text">
+                        <h2 class="newsletter-title">ابق على تواصل مع فريش مارت</h2>
+                        <p class="newsletter-subtitle">احصل على عروض أسبوعية وتحديثات المنتجات الطازجة في صندوق بريدك</p>
+                    </div>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="أدخل عنوان بريدك الإلكتروني" class="newsletter-input">
+                        <button type="submit" class="btn btn-primary">اشترك 📧</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>حول فريش مارت</h3>
+                    <p>سوبر ماركتكم الموثوق عبر الإنترنت لتوصيل البقالة الطازجة والمستلزمات المنزلية إلى باب منزلكم.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>خدمة العملاء</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">اتصل بنا</a></li>
+                        <li><a href="#">الأسئلة الشائعة</a></li>
+                        <li><a href="#">معلومات الشحن</a></li>
+                        <li><a href="#">الإرجاع</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">من نحن</a></li>
+                        <li><a href="#">سياسة الخصوصية</a></li>
+                        <li><a href="#">شروط الخدمة</a></li>
+                        <li><a href="#">الوظائف</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>تواصل معنا</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📘</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">🐦</a>
+                        <a href="#" class="social-link">📧</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 فريش مارت. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loading-spinner">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

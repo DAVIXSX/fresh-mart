@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عربة التسوق - فريش مارت</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="index.html">
+                        <span class="logo-icon">🛒</span>
+                        <span class="logo-text">فريش مارت</span>
+                    </a>
+                </div>
+
+                <div class="search-container">
+                    <form class="search-form">
+                        <input type="text" name="q" placeholder="ابحث عن المنتجات..." class="search-input">
+                        <button type="submit" class="search-btn">🔍</button>
+                    </form>
+                </div>
+
+                <div class="header-actions">
+                    <a href="cart.html" class="cart-link active">
+                        <span class="cart-icon">🛒</span>
+                        <span class="cart-count" id="cart-count">0</span>
+                    </a>
+                    <button class="menu-toggle" id="menu-toggle" aria-label="تبديل القائمة">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+
+                <div class="mobile-menu" id="mobile-menu">
+                    <div class="mobile-menu-header">
+                        <div class="logo">
+                            <a href="index.html">
+                                <span class="logo-icon">🛒</span>
+                                <span class="logo-text">فريش مارت</span>
+                            </a>
+                        </div>
+                        <button class="mobile-close" id="mobile-close" aria-label="إغلاق القائمة">×</button>
+                    </div>
+                    <ul class="mobile-nav-list">
+                        <li class="mobile-nav-item">
+                            <a href="index.html" class="mobile-nav-link">🏠 الرئيسية</a>
+                        </li>
+                        <li class="mobile-nav-item">
+                            <a href="cart.html" class="mobile-nav-link">🛒 عربة التسوق</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar-enhanced">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="nav-primary">
+                    <a href="index.html" class="nav-link-enhanced">
+                        <span class="nav-icon">🏠</span>
+                        <span class="nav-text">الرئيسية</span>
+                    </a>
+                    <a href="cart.html" class="nav-link-enhanced active">
+                        <span class="nav-icon">🛒</span>
+                        <span class="nav-text">عربة التسوق</span>
+                        <span class="cart-badge" id="nav-cart-count">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Breadcrumb -->
+        <section class="breadcrumb-section">
+            <div class="container">
+                <nav class="breadcrumb">
+                    <a href="index.html">الرئيسية</a>
+                    <span class="separator">←</span>
+                    <span class="current">عربة التسوق</span>
+                </nav>
+            </div>
+        </section>
+
+        <!-- Cart Section -->
+        <section class="cart-section">
+            <div class="container">
+                <div class="section-header">
+                    <h1 class="page-title">عربة التسوق</h1>
+                    <p class="page-subtitle">راجع منتجاتك واتمم عملية الشراء</p>
+                </div>
+
+                <div class="cart-content">
+                    <!-- Cart Items -->
+                    <div class="cart-main">
+                        <div class="cart-header">
+                            <h2>المنتجات المحددة</h2>
+                            <button class="clear-cart-btn" onclick="freshMart.clearCart()">
+                                🗑️ إفراغ السلة
+                            </button>
+                        </div>
+
+                        <div class="cart-items-container">
+                            <!-- Cart items will be populated by JavaScript -->
+                            <div class="empty-cart">
+                                <div class="empty-cart-icon">🛒</div>
+                                <h3>عربة التسوق فارغة</h3>
+                                <p>ابدأ التسوق واضف المنتجات إلى عربتك</p>
+                                <a href="index.html" class="btn btn-primary">تسوق الآن</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cart Summary -->
+                    <div class="cart-sidebar">
+                        <div class="cart-summary">
+                            <h3 class="summary-title">ملخص الطلب</h3>
+                            
+                            <div class="summary-row">
+                                <span>المجموع الفرعي:</span>
+                                <span class="cart-subtotal">$0.00</span>
+                            </div>
+                            
+                            <div class="summary-row">
+                                <span>الشحن:</span>
+                                <span class="shipping-cost">مجاني</span>
+                            </div>
+                            
+                            <div class="summary-row">
+                                <span>الضريبة:</span>
+                                <span class="tax-amount">$0.00</span>
+                            </div>
+                            
+                            <div class="summary-divider"></div>
+                            
+                            <div class="summary-row total-row">
+                                <span>المجموع الكلي:</span>
+                                <span class="cart-total">$0.00</span>
+                            </div>
+                            
+                            <div class="summary-actions">
+                                <button class="btn btn-primary btn-full checkout-btn" onclick="proceedToCheckout()">
+                                    إتمام الشراء 💳
+                                </button>
+                                <a href="index.html" class="btn btn-outline btn-full continue-shopping">
+                                    مواصلة التسوق
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Coupon Section -->
+                        <div class="coupon-section">
+                            <h4>كوبون خصم</h4>
+                            <form class="coupon-form">
+                                <div class="coupon-input-group">
+                                    <input type="text" placeholder="أدخل رمز الكوبون" class="coupon-input">
+                                    <button type="submit" class="btn btn-outline">تطبيق</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recommended Products -->
+        <section class="recommended-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">منتجات قد تهمك</h2>
+                    <p class="section-subtitle">اكتشف منتجات أخرى مميزة</p>
+                </div>
+                <div class="products-grid recommended-products">
+                    <!-- Recommended products will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>حول فريش مارت</h3>
+                    <p>سوبر ماركتكم الموثوق عبر الإنترنت لتوصيل البقالة الطازجة والمستلزمات المنزلية إلى باب منزلكم.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>خدمة العملاء</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">اتصل بنا</a></li>
+                        <li><a href="#">الأسئلة الشائعة</a></li>
+                        <li><a href="#">معلومات الشحن</a></li>
+                        <li><a href="#">الإرجاع</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">من نحن</a></li>
+                        <li><a href="#">سياسة الخصوصية</a></li>
+                        <li><a href="#">شروط الخدمة</a></li>
+                        <li><a href="#">الوظائف</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>تواصل معنا</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📘</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">🐦</a>
+                        <a href="#" class="social-link">📧</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 فريش مارت. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        function proceedToCheckout() {
+            if (Object.keys(freshMart.cart).length === 0) {
+                freshMart.showToast('عربة التسوق فارغة', 'error');
+                return;
+            }
+            
+            // Simulate checkout process
+            freshMart.showToast('تم إتمام الطلب بنجاح! سيتم توصيله قريباً', 'success');
+            
+            // Clear cart after successful checkout
+            setTimeout(() => {
+                freshMart.cart = {};
+                freshMart.saveCart();
+                freshMart.updateCartDisplay();
+                freshMart.renderCartItems();
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
