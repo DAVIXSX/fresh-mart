@@ -290,7 +290,7 @@ class FreshMart {
             ${product.discount > 0 ? `<div class="product-badge discount-badge">-${product.discount}%</div>` : ''}
             
             <div class="product-image">
-                <span class="product-placeholder">📦</span>
+                <span class="product-placeholder">${this.getProductEmoji(product)}</span>
                 <div class="product-overlay">
                     <a href="product-${product.id}.html" class="overlay-btn">عرض سريع</a>
                 </div>
@@ -349,7 +349,7 @@ class FreshMart {
         card.innerHTML = `
             <div class="deal-badge">${product.discount}% خصم</div>
             <div class="deal-image">
-                <span class="product-placeholder">📦</span>
+                <span class="product-placeholder">${this.getProductEmoji(product)}</span>
                 <div class="deal-timer">
                     <span class="timer-icon">⏰</span>
                     <span class="timer-text">ينتهي قريباً</span>
@@ -411,7 +411,7 @@ class FreshMart {
             cartItem.className = 'cart-item';
             cartItem.innerHTML = `
                 <div class="cart-item-image">
-                    <span class="product-placeholder">📦</span>
+                    <span class="product-placeholder">${this.getProductEmoji(product)}</span>
                 </div>
                 <div class="cart-item-details">
                     <h4>${product.name}</h4>
@@ -479,6 +479,65 @@ class FreshMart {
             currentSlide = (currentSlide + 1) % slides.length;
             showSlide(currentSlide);
         }, 5000);
+    }
+
+    // Get product-specific emoji based on category and product type
+    getProductEmoji(product) {
+        // Category-based emojis
+        const categoryEmojis = {
+            'vegetables': '🥬',
+            'fruits': '🍎',
+            'dairy': '🥛',
+            'legumes': '🌱',
+            'bakery': '🍞',
+            'beverages': '🥤',
+            'household': '🧽',
+            'snacks': '🍿',
+            'frozen': '🧊'
+        };
+
+        // Product-specific emojis for better variety
+        const productEmojis = {
+            // Vegetables
+            'tomato': '🍅', 'potato': '🥔', 'onion': '🧅', 'carrot': '🥕',
+            'broccoli': '🥦', 'cucumber': '🥒', 'lettuce': '🥬', 'pepper': '🌶️',
+            'eggplant': '🍆', 'corn': '🌽', 'spinach': '🥬',
+            
+            // Fruits
+            'apple': '🍎', 'banana': '🍌', 'orange': '🍊', 'grape': '🍇',
+            'strawberry': '🍓', 'pineapple': '🍍', 'watermelon': '🍉',
+            'peach': '🍑', 'lemon': '🍋', 'cherry': '🍒', 'avocado': '🥑',
+            
+            // Dairy
+            'milk': '🥛', 'cheese': '🧀', 'butter': '🧈', 'yogurt': '🥛',
+            'cream': '🥛', 'ice cream': '🍦',
+            
+            // Bakery
+            'bread': '🍞', 'croissant': '🥐', 'bagel': '🥯', 'donut': '🍩',
+            'cake': '🎂', 'cookie': '🍪', 'pretzel': '🥨',
+            
+            // Beverages
+            'coffee': '☕', 'tea': '🍵', 'juice': '🧃', 'soda': '🥤',
+            'water': '💧', 'beer': '🍺', 'wine': '🍷',
+            
+            // Snacks
+            'chips': '🍟', 'popcorn': '🍿', 'nuts': '🥜', 'chocolate': '🍫',
+            'candy': '🍬', 'crackers': '🍘',
+            
+            // Legumes
+            'beans': '🫘', 'lentils': '🌱', 'peas': '🟢', 'chickpeas': '🌱'
+        };
+
+        // First try to find a specific emoji for the product name
+        const productName = product.name.toLowerCase();
+        for (const [key, emoji] of Object.entries(productEmojis)) {
+            if (productName.includes(key)) {
+                return emoji;
+            }
+        }
+
+        // Fall back to category emoji
+        return categoryEmojis[product.category] || '📦';
     }
 
     // Toast notifications
