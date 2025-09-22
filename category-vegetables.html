@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الخضروات - فريش مارت</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="index.html">
+                        <span class="logo-icon">🛒</span>
+                        <span class="logo-text">فريش مارت</span>
+                    </a>
+                </div>
+
+                <div class="search-container">
+                    <form class="search-form">
+                        <input type="text" name="q" placeholder="ابحث عن المنتجات..." class="search-input">
+                        <button type="submit" class="search-btn">🔍</button>
+                    </form>
+                </div>
+
+                <div class="header-actions">
+                    <a href="cart.html" class="cart-link">
+                        <span class="cart-icon">🛒</span>
+                        <span class="cart-count" id="cart-count">0</span>
+                    </a>
+                    <button class="menu-toggle" id="menu-toggle" aria-label="تبديل القائمة">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+
+                <div class="mobile-menu" id="mobile-menu">
+                    <div class="mobile-menu-header">
+                        <div class="logo">
+                            <a href="index.html">
+                                <span class="logo-icon">🛒</span>
+                                <span class="logo-text">فريش مارت</span>
+                            </a>
+                        </div>
+                        <button class="mobile-close" id="mobile-close" aria-label="إغلاق القائمة">×</button>
+                    </div>
+                    <ul class="mobile-nav-list">
+                        <li class="mobile-nav-item">
+                            <a href="index.html" class="mobile-nav-link">🏠 الرئيسية</a>
+                        </li>
+                        <li class="mobile-nav-item">
+                            <a href="cart.html" class="mobile-nav-link">🛒 عربة التسوق</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar-enhanced">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="nav-primary">
+                    <a href="index.html" class="nav-link-enhanced">
+                        <span class="nav-icon">🏠</span>
+                        <span class="nav-text">الرئيسية</span>
+                    </a>
+                    <span class="nav-link-enhanced active">
+                        <span class="nav-icon">🥕</span>
+                        <span class="nav-text">الخضروات</span>
+                    </span>
+                </div>
+                <div class="nav-secondary">
+                    <a href="cart.html" class="nav-link-enhanced">
+                        <span class="nav-icon">🛒</span>
+                        <span class="nav-text">عربة التسوق</span>
+                        <span class="cart-badge" id="nav-cart-count">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Breadcrumb -->
+        <section class="breadcrumb-section">
+            <div class="container">
+                <nav class="breadcrumb">
+                    <a href="index.html">الرئيسية</a>
+                    <span class="separator">←</span>
+                    <span class="current">الخضروات</span>
+                </nav>
+            </div>
+        </section>
+
+        <!-- Category Header -->
+        <section class="category-header">
+            <div class="container">
+                <div class="category-hero">
+                    <div class="category-icon-large">🥕</div>
+                    <div class="category-info">
+                        <h1 class="page-title">الخضروات</h1>
+                        <p class="page-subtitle">خضروات طازجة ومتنوعة مباشرة من المزرعة</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section class="category-products-section">
+            <div class="container">
+                <div class="products-grid category-products-grid">
+                    <!-- Products will be loaded by JavaScript -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>حول فريش مارت</h3>
+                    <p>سوبر ماركتكم الموثوق عبر الإنترنت لتوصيل البقالة الطازجة والمستلزمات المنزلية إلى باب منزلكم.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>خدمة العملاء</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">اتصل بنا</a></li>
+                        <li><a href="#">الأسئلة الشائعة</a></li>
+                        <li><a href="#">معلومات الشحن</a></li>
+                        <li><a href="#">الإرجاع</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">من نحن</a></li>
+                        <li><a href="#">سياسة الخصوصية</a></li>
+                        <li><a href="#">شروط الخدمة</a></li>
+                        <li><a href="#">الوظائف</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>تواصل معنا</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📘</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">🐦</a>
+                        <a href="#" class="social-link">📧</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 فريش مارت. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
